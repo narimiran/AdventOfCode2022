@@ -14,7 +14,7 @@ All my Advent of Code repos:
 
 &nbsp;
 
-Last year's Python was fun, so I'll keep it as my main language this year.  
+Last year's Python was fun, so I'll keep it as my main language this year.
 
 But to keep things interesting and (too?) challenging, I'll make my first learning steps in Clojure.
 If you have any advice how to improve my Clojure solutions, please open an issue or comment in any other way.
@@ -27,8 +27,8 @@ If you have any advice how to improve my Clojure solutions, please open an issue
 Task                                          | Python Solution             | Clojure Solution               | Comment for Python solution
 ---                                           | ---                         | ---                            | ---
 Day 00: Helper file                           | [aoc.py](python/aoc.py)     | [aoc.clj](clojure/aoc.clj)     | Utilities I use to solve the tasks.
+[Day 01](http://adventofcode.com/2022/day/1)  | [day01.py](python/day01.py) | [day01.clj](clojure/day01.clj) | Unexpected double-newline input for the first task.
 
-<!-- [Day 01](http://adventofcode.com/2022/day/1)  | [day01.py](python/day01.py) | [day01.clj](clojure/day01.clj) | -->
 <!-- [Day 02](http://adventofcode.com/2022/day/2)  | [day02.py](python/day02.py) | [day02.clj](clojure/day02.clj) | -->
 <!-- [Day 03](http://adventofcode.com/2022/day/3)  | [day03.py](python/day03.py) | [day03.clj](clojure/day03.clj) | -->
 <!-- [Day 04](http://adventofcode.com/2022/day/4)  | [day04.py](python/day04.py) | [day04.clj](clojure/day04.clj) | -->
