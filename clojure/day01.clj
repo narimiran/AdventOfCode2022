@@ -10,5 +10,5 @@
        reverse))
 
 
-(println (first calories))
-(println (reduce + (take 3 calories)))
+[(first calories)
+ (reduce + (take 3 calories))]

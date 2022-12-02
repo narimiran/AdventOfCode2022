@@ -24,4 +24,4 @@ print(solve())
 
 def test():
     assert solve("01_test") == (24_000, 45_000)
-    assert solve(1) == (70_369, 203_002)
+    assert solve() == (70_369, 203_002)
