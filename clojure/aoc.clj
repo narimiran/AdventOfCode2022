@@ -56,3 +56,10 @@
 
 (defn ord [s]
   (int (first s)))
+
+
+(defn integers
+  ([s] (integers s true))
+  ([s {:keys [negative?]}]
+   (map #(Integer/parseInt %)
+        (re-seq (if negative? #"-?\d+" #"\d+") s))))
