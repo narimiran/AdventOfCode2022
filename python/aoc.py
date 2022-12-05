@@ -25,7 +25,7 @@ def parse_multiline_string(s, datatype=str, sep='\n'):
 def read_input(filename, datatype=str, sep='\n'):
     filename = f"{filename:02d}" if isinstance(filename, int) else filename
     with open(f"inputs/{filename}.txt") as f:
-        return parse_multiline_string(f.read().strip(), datatype, sep)
+        return parse_multiline_string(f.read(), datatype, sep)
 
 def read_input_line(filename, sep=''):
     filename = f"{filename:02d}" if isinstance(filename, int) else filename

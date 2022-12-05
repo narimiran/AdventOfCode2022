@@ -31,8 +31,8 @@ Day 00: Helper file                           | [aoc.py](python/aoc.py)     | [a
 [Day 02](http://adventofcode.com/2022/day/2)  | [day02.py](python/day02.py) | [day02.clj](clojure/day02.clj) | Using `match` statement (Python 3.10+).
 [Day 03](http://adventofcode.com/2022/day/3)  | [day03.py](python/day03.py) | [day03.clj](clojure/day03.clj) | I like my Clojure solution more.
 [Day 04](http://adventofcode.com/2022/day/4)  | [day04.py](python/day04.py) | [day04.clj](clojure/day04.clj) | Look ma, no sets!
+[Day 05](http://adventofcode.com/2022/day/5)  | [day05.py](python/day05.py) | [day05.clj](clojure/day05.clj) | Parsing the input like a real man.
 
-<!-- [Day 05](http://adventofcode.com/2022/day/5)  | [day05.py](python/day05.py) | [day05.clj](clojure/day05.clj) | -->
 <!-- [Day 06](http://adventofcode.com/2022/day/6)  | [day06.py](python/day06.py) | [day06.clj](clojure/day06.clj) | -->
 <!-- [Day 07](http://adventofcode.com/2022/day/7)  | [day07.py](python/day07.py) | [day07.clj](clojure/day07.clj) | -->
 <!-- [Day 08](http://adventofcode.com/2022/day/8)  | [day08.py](python/day08.py) | [day08.clj](clojure/day08.clj) | -->
