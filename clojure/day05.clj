@@ -7,19 +7,18 @@
        aoc/transpose
        (map #(remove #{\space \[ \]} %))
        (remove empty?)
+       (cons '())
        vec))
 
 
 (defn move [stacks [amount from to] pick-multiple?]
-  (let [from-stack (dec from)
-        to-stack (dec to)
-        [took remains] (split-at amount (stacks from-stack))
+  (let [[took remains] (split-at amount (stacks from))
         put (apply conj
-                   (stacks to-stack)
+                   (stacks to)
                    (if pick-multiple? (reverse took) took))]
     (-> stacks
-        (assoc from-stack remains)
-        (assoc to-stack put))))
+        (assoc from remains)
+        (assoc to put))))
 
 
 (defn solve [stacks instructions can-pick-multiple?]

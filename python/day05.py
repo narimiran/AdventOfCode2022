@@ -3,18 +3,18 @@ from aoc import *
 
 def parse_stacks(drawing):
     columns = transpose(drawing[:-1][::-1])
-    return [list(cat(col).strip())
-            for col in columns[1::4]]
+    return [[""]] + [list(cat(col).strip())
+                     for col in columns[1::4]]
 
 
 def p1(s, amount, fr, to):
     for _ in range(amount):
-        s[to-1].append(s[fr-1].pop())
+        s[to].append(s[fr].pop())
 
 
 def p2(s, amount, fr, to):
-    s[to-1] += s[fr-1][-amount:]
-    s[fr-1]  = s[fr-1][:-amount]
+    s[to] += s[fr][-amount:]
+    s[fr]  = s[fr][:-amount]
 
 
 def rearrange(drawing, instructions, func):
