@@ -38,7 +38,7 @@
 
 
 
-(def input (aoc/read-input 2 :list))
+(def input (aoc/read-input 2 {:datatype :list}))
 
 [(part-1 input)
  (part-2 input)]

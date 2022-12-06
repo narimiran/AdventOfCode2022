@@ -31,7 +31,7 @@
 
 
 (def input
-  (->> (aoc/read-input 5 :string #"\n\n")
+  (->> (aoc/read-input 5 {:sep #"\n\n"})
        (map aoc/parse-multiline-string)))
 (def stacks
   (->> input
