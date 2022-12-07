@@ -33,8 +33,8 @@ Day 00: Helper file                           | [aoc.py](python/aoc.py)     | [a
 [Day 04](http://adventofcode.com/2022/day/4)  | [day04.py](python/day04.py) | [day04.clj](clojure/day04.clj) | Look ma, no sets!
 [Day 05](http://adventofcode.com/2022/day/5)  | [day05.py](python/day05.py) | [day05.clj](clojure/day05.clj) | Parsing the input like a real man.
 [Day 06](http://adventofcode.com/2022/day/6)  | [day06.py](python/day06.py) | [day06.clj](clojure/day06.clj) | The easiest one so far.
+[Day 07](http://adventofcode.com/2022/day/7)  | [day07.py](python/day07.py) | [day07.clj](clojure/day07.clj) | The toughest one so far.
 
-<!-- [Day 07](http://adventofcode.com/2022/day/7)  | [day07.py](python/day07.py) | [day07.clj](clojure/day07.clj) | -->
 <!-- [Day 08](http://adventofcode.com/2022/day/8)  | [day08.py](python/day08.py) | [day08.clj](clojure/day08.clj) | -->
 <!-- [Day 09](http://adventofcode.com/2022/day/9)  | [day09.py](python/day09.py) | [day09.clj](clojure/day09.clj) | -->
 <!-- [Day 10](http://adventofcode.com/2022/day/10) | [day10.py](python/day10.py) | [day10.clj](clojure/day10.clj) | -->
