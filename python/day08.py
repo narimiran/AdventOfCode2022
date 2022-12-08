@@ -2,17 +2,14 @@ from aoc import *
 from math import prod
 
 
-def scenic_score(height, dirs):
-    return prod(next((i for i, h in enumerate(d, 1) if h >= height),
-                     len(d))
-                for d in dirs)
-
+def viewing_distance(height, d):
+    return next((i for i, h in enumerate(d, 1) if h >= height), inf)
 
 def solve(file=8):
     horizontal = mapl(digits, read_input(file))
     vertical = transpose(horizontal)
     size = len(horizontal)
-    visible_trees = 0
+    visible_from_outside = 0
     highest_score = 0
     for y in range(size):
         for x in range(size):
@@ -20,15 +17,17 @@ def solve(file=8):
             row = horizontal[y]
             col = vertical[x]
             directions = (
-                list(reversed(row[:x])),
+                row[:x][::-1],
                 row[x+1:],
-                list(reversed(col[:y])),
+                col[:y][::-1],
                 col[y+1:]
             )
-            visible_trees += any(not(d) # edge
-                                 or height > max(d) for d in directions)
-            highest_score = max(highest_score, scenic_score(height, directions))
-    return visible_trees, highest_score
+            viewing_distances = [viewing_distance(height, d) for d in directions]
+            visible_from_outside += any(dist == inf for dist in viewing_distances)
+            visible_trees = (min(len(d), v)
+                             for v, d in zip(viewing_distances, directions))
+            highest_score = max(highest_score, prod(visible_trees))
+    return visible_from_outside, highest_score
 
 
 print(solve())
