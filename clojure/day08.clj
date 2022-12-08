@@ -16,19 +16,19 @@
         size (count forest)]
     (reduce
      (fn [[visible score] [x y]]
-       (if (some #{0 (dec size)} [x y]) ; edges
-         [(inc visible) score]
-         (let [row    (hor y)
-               col    (vert x)
-               height (row x)
-               dirs   [(reverse (subvec row 0 x)) ; left
-                       (subvec row (inc x))       ; right
-                       (reverse (subvec col 0 y)) ; up
-                       (subvec col (inc y))]]     ; down
-           [(if (some #(> height (apply max %)) dirs)
-              (inc visible)
-              visible)
-            (max score (apply * (map #(viewing-distance height %) dirs)))])))
+       [(inc visible) score]
+       (let [row    (hor y)
+             col    (vert x)
+             height (row x)
+             dirs   [(reverse (subvec row 0 x)) ; left
+                     (subvec row (inc x))       ; right
+                     (reverse (subvec col 0 y)) ; up
+                     (subvec col (inc y))]]     ; down
+         [(if (or (some empty? dirs) ; edge
+                  (some #(> height (apply max %)) dirs))
+            (inc visible)
+            visible)
+          (max score (apply * (map #(viewing-distance height %) dirs)))]))
      [0 0]
      (for [x (range size)
            y (range size)]
