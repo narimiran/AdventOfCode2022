@@ -28,35 +28,35 @@
 
 (defn move-tail [head tail]
   (loop [[current & remaining] tail
-         snake [head]]
-    (if (empty? current) snake
+         rope [head]]
+    (if (empty? current) rope
         (recur remaining
                (->> current
-                    (follow (peek snake))
-                    (conj snake))))))
+                    (follow (peek rope))
+                    (conj rope))))))
 
 
-(defn move-snake [[head & tail] cmd]
+(defn move-rope [[head & tail] cmd]
   (-> head
       (move-head cmd)
       (move-tail tail)))
 
 
-(defn play [commands length]
-  (loop [[cmd & rem] commands
-         snake (vec (repeat length [0 0]))
+(defn simulate [motions length]
+  (loop [[cmd & rem] motions
+         rope (vec (repeat length [0 0]))
          seen #{}]
-    (if (empty? cmd) (count (conj seen (peek snake)))
+    (if (empty? cmd) (count (conj seen (peek rope)))
         (recur rem
-               (move-snake snake cmd)
-               (conj seen (peek snake))))))
+               (move-rope rope cmd)
+               (conj seen (peek rope))))))
 
 
-(def commands
+(def motions
   (->> 9
        aoc/read-input
        (mapcat parse-line)))
 
 
-[(play commands 2)
- (play commands 10)]
+[(simulate motions 2)
+ (simulate motions 10)]
