@@ -40,6 +40,11 @@ def test():
 
     assert filter_first([2, 7, 4, 6, 8], lambda x: x > 5) == 7
 
+    assert move_point((1, 0), (2, 5)) == (3, 5)
+    assert move_point((1, 0), (-2, -5)) == (-1, -5)
+    assert move_point((1, 0, 2), (9, 2, 4)) == (10, 2, 6)
+    assert move_point((1, 0, -2), (-9, 2, -4)) == (-8, 2, -6)
+
     assert manhattan((5, -3)) == 8
     assert manhattan((5, -3), (2, 7)) == 13
 

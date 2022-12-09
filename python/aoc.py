@@ -51,6 +51,9 @@ def filter_first(iterable, pred):
     return first(el for el in iterable if pred(el))
 
 
+def move_point(a, b):
+    return tuple(p + q for p, q in zip(a, b))
+
 def manhattan(a, b=(0, 0)):
     return sum(abs(p - q) for p, q in zip(a, b))
 
