@@ -5,18 +5,19 @@ DIRECTIONS = {'U': -1j, 'D': 1j, 'L': -1, 'R': 1}
 
 
 def solve(file=9):
-    commands = mapl(str.split, read_input(file))
-    snake = [0] * 10
-    snake_paths = [set() for _ in snake]
+    commands = map(str.split, read_input(file))
+    rope = [0] * 10
+    seen = [set(), set()]
     for cmd, amount in commands:
         for _ in range(int(amount)):
-            snake[0] += DIRECTIONS[cmd]
-            for i, tail in enumerate(snake[1:], 1):
-                diff = snake[i-1] - tail
+            rope[0] += DIRECTIONS[cmd]
+            for i in range(1, 10):
+                diff = rope[i-1] - rope[i]
                 if abs(diff) >= 2:
-                    snake[i] += complex(sign(diff.real), sign(diff.imag))
-                snake_paths[i].add(snake[i])
-    return len(snake_paths[1]), len(snake_paths[9])
+                    rope[i] += complex(sign(diff.real), sign(diff.imag))
+            seen[0].add(rope[1])
+            seen[1].add(rope[9])
+    return mapt(len, seen)
 
 
 print(solve())
