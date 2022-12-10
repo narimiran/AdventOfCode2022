@@ -17,19 +17,18 @@
 
 
 (defn parse-input [commands]
-  (loop [commands commands
-         sizes {}
-         path []]
-    (if (empty? commands)
-      sizes
-      (let [[hd & tl] commands]
-        (match [(strs/split hd #" ")]
-          [["$" "cd" "/"]]  (recur tl sizes ["/"])
-          [["$" "cd" ".."]] (recur tl sizes (pop path))
-          [["$" "cd" f]]    (recur tl sizes (conj path f))
-          [(:or ["$" "ls"]
-                ["dir" _])] (recur tl sizes path)
-          [[val _]]         (recur tl (merge-with + sizes (go-up path val)) path))))))
+  (->> commands
+       (reduce
+        (fn [[sizes path] cmd]
+          (match [(strs/split cmd #" ")]
+            [["$" "cd" "/"]]  [sizes ["/"]]
+            [["$" "cd" ".."]] [sizes (pop path)]
+            [["$" "cd" f]]    [sizes (conj path f)]
+            [(:or ["$" "ls"]
+                  ["dir" _])] [sizes path]
+            [[val _]]         [(merge-with + sizes (go-up path val)) path]))
+        [{} []])
+       first))
 
 
 (defn part-1 [sizes]

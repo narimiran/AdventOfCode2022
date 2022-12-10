@@ -27,13 +27,13 @@
 
 
 (defn move-tail [head tail]
-  (loop [[current & remaining] tail
-         rope [head]]
-    (if (empty? current) rope
-        (recur remaining
-               (->> current
-                    (follow (peek rope))
-                    (conj rope))))))
+  (reduce
+   (fn [rope tail-piece]
+     (->> tail-piece
+          (follow (peek rope))
+          (conj rope)))
+   [head]
+   tail))
 
 
 (defn move-rope [[head & tail] cmd]
@@ -43,13 +43,16 @@
 
 
 (defn simulate [motions length]
-  (loop [[cmd & rem] motions
-         rope (vec (repeat length [0 0]))
-         seen #{}]
-    (if (empty? cmd) (count (conj seen (peek rope)))
-        (recur rem
-               (move-rope rope cmd)
-               (conj seen (peek rope))))))
+  (->> motions
+       (reduce
+        (fn [{:keys [rope seen]} cmd]
+          (let [new-pos (move-rope rope cmd)]
+            {:rope new-pos
+             :seen (conj seen (peek new-pos))}))
+        {:rope (vec (repeat length [0 0]))
+         :seen #{}})
+       :seen
+       count))
 
 
 (def motions
