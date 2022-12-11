@@ -30,6 +30,9 @@ def test():
     assert integers("23 -42 55") == (23, -42, 55)
     assert integers("23 -42 55", negative=False) == (23, 42, 55)
 
+    assert first_int("abc 35 def 44") == 35
+    assert first_int("abc -35 def 44") == -35
+
     assert count_if([3, -5, 10, -7, 33], lambda x: x > 0) == 3
     assert count_if([3, -5, 10, -7, 33], lambda x: x > 1000) == 0
 

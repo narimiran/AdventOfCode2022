@@ -40,6 +40,10 @@ def digits(line):
 def integers(text, negative=True):
     return mapt(int, re.findall(r"-?\d+" if negative else r"\d+", text))
 
+def first_int(text):
+    if (m := re.search(r"-?\d+", text)):
+        return int(m.group(0))
+
 
 def count_if(iterable, pred=bool):
     return sum(1 for item in iterable if pred(item))
