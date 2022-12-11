@@ -1,14 +1,14 @@
 (ns day09
   (:require aoc
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clojure.math :as math]))
 
 
-(defn parse-line [line]
+(defn parse-motion [line]
   (->> line
        (#(str/split % #" "))
        ((fn [[dir amount]]
-          (repeat (Integer/parseInt amount) dir)))))
-
+          (repeat (parse-long amount) dir)))))
 
 (defn move-head [head cmd]
   (let [dirs {"U" [0 -1]
@@ -17,14 +17,12 @@
               "R" [1  0]}]
     (mapv + head (dirs cmd))))
 
-
 (defn follow [[hx hy] [tx ty]]
   (let [dx (- hx tx)
         dy (- hy ty)]
     (if (< (max (abs dx) (abs dy)) 2) ; Chebyshev distance
       [tx ty]
-      [(+ tx (aoc/sign dx)) (+ ty (aoc/sign dy))])))
-
+      [(+ tx (math/signum dx)) (+ ty (math/signum dy))])))
 
 (defn move-tail [head tail]
   (reduce
@@ -35,12 +33,10 @@
    [head]
    tail))
 
-
 (defn move-rope [[head & tail] cmd]
   (-> head
       (move-head cmd)
       (move-tail tail)))
-
 
 (defn simulate [motions length]
   (->> motions
@@ -58,8 +54,7 @@
 (def motions
   (->> 9
        aoc/read-input
-       (mapcat parse-line)))
-
+       (mapcat parse-motion)))
 
 [(simulate motions 2)
  (simulate motions 10)]

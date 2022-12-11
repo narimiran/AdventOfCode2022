@@ -7,8 +7,8 @@
         :or {datatype :string sep #"\n"}}]
   (->> (str/split s sep)
        ((case datatype
-          :int (partial map #(Integer/parseInt %))
-          :list (partial map #(str/split % #""))
+          :int    (partial map parse-long)
+          :list   (partial map #(str/split % #""))
           :string identity))))
 
 
@@ -18,15 +18,13 @@
   (let [name (if (int? filename)
                (format "%02d" filename)
                filename)]
-    (->> name
-         (#(str "inputs/" % ".txt"))
-         slurp
-         (#(parse-multiline-string % {:datatype datatype :sep sep})))))
+    (-> (str "inputs/" name ".txt")
+        slurp
+        (parse-multiline-string {:datatype datatype :sep sep}))))
 
 
 (defn read-input-line
-  [filename & {:keys [sep]
-               :or {sep nil}}]
+  [filename & {:keys [sep]}]
   (->> filename
        read-input
        first
@@ -36,9 +34,8 @@
 
 
 (defn string->digits [s]
-  (->> s
-       (#(str/split % #""))
-       (mapv #(Integer/parseInt %))))
+  (->> (str/split s #"")
+       (mapv parse-long)))
 
 
 (defn transpose [matrix]
@@ -59,12 +56,5 @@
 (defn integers
   [s & {:keys [negative?]
         :or {negative? true}}]
-  (map #(Integer/parseInt %)
+  (map parse-long
        (re-seq (if negative? #"-?\d+" #"\d+") s)))
-
-
-(defn sign [x]
-  (cond
-    (> x 0) 1
-    (< x 0) -1
-    :else 0))

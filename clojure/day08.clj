@@ -8,7 +8,6 @@
        count
        inc))
 
-
 (defn solve [forest]
   (let [hor    forest
         vert   (aoc/transpose forest)
@@ -35,11 +34,9 @@
        [x y]))))
 
 
-(def input
+(def height-map
   (->> 8
        aoc/read-input
-       (map aoc/string->digits)
-       vec))
+       (mapv aoc/string->digits)))
 
-
-(solve input)
+(solve height-map)

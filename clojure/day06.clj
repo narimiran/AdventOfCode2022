@@ -2,17 +2,17 @@
   (:require aoc))
 
 
-(defn solve
-  ([input length]
-   (solve input length length))
-  ([input length i]
-   (let [chars (take length input)]
-     (if (apply distinct? chars)
-       i
-       (solve (rest input) length (inc i))))))
+(defn solve [buffer length]
+  (loop [pos    length
+         buffer buffer]
+    (if (->> buffer
+             (take length)
+             (apply distinct?))
+      pos
+      (recur (inc pos) (rest buffer)))))
 
 
-(def input (aoc/read-input-line 6))
+(def datastream-buffer (aoc/read-input-line 6))
 
-[(solve input 4)
- (solve input 14)]
+[(solve datastream-buffer 4)
+ (solve datastream-buffer 14)]

@@ -10,7 +10,6 @@
        (cons '())
        vec))
 
-
 (defn move [stacks [amount from to] pick-multiple?]
   (let [[took remains] (split-at amount (stacks from))
         put (apply conj
@@ -19,7 +18,6 @@
     (-> stacks
         (assoc from remains)
         (assoc to put))))
-
 
 (defn solve [stacks instructions can-pick-multiple?]
   (let [move-boxes
@@ -33,11 +31,13 @@
 (def input
   (->> (aoc/read-input 5 {:sep #"\n\n"})
        (map aoc/parse-multiline-string)))
+
 (def stacks
   (->> input
        first
        drop-last
        parse-stacks))
+
 (def instructions
   (->> input
        last

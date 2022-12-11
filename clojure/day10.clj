@@ -13,20 +13,18 @@
    []
    lines))
 
-
 (defn part-1 [x-positions]
   (->> (range 20 221 40)
        (map #(* % (nth x-positions (dec %))))
        (apply +)))
 
-
 (defn part-2 [x-positions]
   (->> x-positions
        (map-indexed #(if (<= (dec %2) (mod %1 40) (inc %2))
-                       "█"
-                       " "))
+                       "██"
+                       "  "))
        (partition 40)
-       (map #(apply str %))))
+       (map str/join)))
 
 
 (def x-positions
@@ -34,7 +32,6 @@
        aoc/read-input
        read-instructions
        (reductions + 1))) ; x starts at 1
-
 
 [(part-1 x-positions)
  (part-2 x-positions)]
