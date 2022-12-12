@@ -1,6 +1,6 @@
 (ns day07
   (:require aoc
-            [clojure.string :as strs]
+            [clojure.string :as str]
             [clojure.core.match :refer [match]]))
 
 
@@ -16,7 +16,7 @@
   (->> commands
        (reduce
         (fn [[sizes path] cmd]
-          (match [(strs/split cmd #" ")]
+          (match [(str/split cmd #" ")]
             [["$" "cd" "/"]]  [sizes ["/"]]
             [["$" "cd" ".."]] [sizes (pop path)]
             [["$" "cd" f]]    [sizes (conj path f)]

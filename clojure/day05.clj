@@ -41,7 +41,7 @@
 (def instructions
   (->> input
        last
-       (map aoc/integers)))
+       (mapv aoc/integers)))
 
 
 [(solve stacks instructions false)

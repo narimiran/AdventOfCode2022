@@ -9,6 +9,7 @@
        ((case datatype
           :int    (partial map parse-long)
           :list   (partial map #(str/split % #""))
+          :vector (partial map vec)
           :string identity))))
 
 
@@ -56,5 +57,23 @@
 (defn integers
   [s & {:keys [negative?]
         :or {negative? true}}]
-  (map parse-long
-       (re-seq (if negative? #"-?\d+" #"\d+") s)))
+  (mapv parse-long
+        (re-seq (if negative? #"-?\d+" #"\d+") s)))
+
+
+(defn neighbours [[x y] amount]
+  (for [dx [-1 0 1]
+        dy [-1 0 1]
+        :when
+        (case amount
+          4 (not= (abs dx) (abs dy))
+          8 (not= dx dy 0)
+          9 true)]
+    [(+ x dx) (+ y dy)]))
+
+
+(defn vec2d->grid [v]
+  (into {}
+        (for [x (range (count (first v)))
+              y (range (count v))]
+          [[x y] ((v y) x)])))

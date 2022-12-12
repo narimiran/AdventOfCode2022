@@ -17,7 +17,7 @@
 
 (def assignments
   (->> (aoc/read-input 4)
-       (map #(aoc/integers % {:negative? false}))))
+       (mapv #(aoc/integers % {:negative? false}))))
 
 [(solve assignments p1)
  (solve assignments p2)]

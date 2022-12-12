@@ -38,8 +38,8 @@ Day 00: Helper file                           | [aoc.py](python/aoc.py)     | [a
 [Day 09](http://adventofcode.com/2022/day/9)  | [day09.py](python/day09.py) | [day09.clj](clojure/day09.clj) | Complex numbers --> simple solution.
 [Day 10](http://adventofcode.com/2022/day/10) | [day10.py](python/day10.py) | [day10.clj](clojure/day10.clj) | Advent of off-by-one errors.
 [Day 11](http://adventofcode.com/2022/day/11) | [day11.py](python/day11.py) | [day11.clj](clojure/day11.clj) | Classy monkeys.
+[Day 12](http://adventofcode.com/2022/day/12) | [day12.py](python/day12.py) | [day12.clj](clojure/day12.clj) | Start from the end, obviously.
 
-<!-- [Day 12](http://adventofcode.com/2022/day/12) | [day12.py](python/day12.py) | [day12.clj](clojure/day12.clj) | -->
 <!-- [Day 13](http://adventofcode.com/2022/day/13) | [day13.py](python/day13.py) | [day13.clj](clojure/day13.clj) | -->
 <!-- [Day 14](http://adventofcode.com/2022/day/14) | [day14.py](python/day14.py) | [day14.clj](clojure/day14.clj) | -->
 <!-- [Day 15](http://adventofcode.com/2022/day/15) | [day15.py](python/day15.py) | [day15.clj](clojure/day15.clj) | -->
