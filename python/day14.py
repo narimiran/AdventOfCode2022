@@ -20,37 +20,27 @@ def parse_input(data):
 
 
 START = 500
-down  = lambda pt: pt + 1j
-left  = lambda pt: pt + 1j - 1
-right = lambda pt: pt + 1j + 1
-
-
-def pour_sand(rock):
-    sand = START
-    while True:
-        if (pos := down(sand)) not in rock:
-            sand = pos
-        elif (pos := left(sand)) not in rock:
-            sand = pos
-        elif (pos := right(sand)) not in rock:
-            sand = pos
-        else:
-            return sand
 
 
 def solve(file=14):
+    def pour(pt, p1):
+        if pt in settled:
+            return pt.imag == floor
+        for dx in (0, -1, 1):
+            if pour(pt + dx+1j, p1) and p1:
+                return True
+        settled.add(pt)
+    count_sand = lambda settled: len(settled) - rock_count
+
     settled = parse_input(read_input(file))
     floor = int(max(pt.imag for pt in settled)) + 2
     for x in range(START-floor, START+floor+1):
         settled.add(complex(x, floor))
-    p1 = 0
-    for n in count(1):
-        sand = pour_sand(settled)
-        if not p1 and sand.imag == floor-1:
-            p1 = n-1
-        settled.add(sand)
-        if sand == START:
-            return p1, n
+    rock_count = len(settled)
+    pour(START, True)
+    p1 = count_sand(settled)
+    pour(START, False)
+    return p1, count_sand(settled)
 
 
 print(solve())
