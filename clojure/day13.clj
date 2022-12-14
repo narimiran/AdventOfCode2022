@@ -38,9 +38,10 @@
 
 (def packets
   (->> 13
-       (#(aoc/read-input % {:sep #"\n\n"}))
-       (mapv aoc/parse-multiline-string)
-       (mapv #(mapv read-string %))))
+       aoc/read-input
+       (remove empty?)
+       (mapv read-string)
+       (partition 2)))
 
 [(part-1 packets)
  (part-2 packets)]
