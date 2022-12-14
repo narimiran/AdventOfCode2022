@@ -40,8 +40,8 @@ Day 00: Helper file                           | [aoc.py](python/aoc.py)     | [a
 [Day 11](http://adventofcode.com/2022/day/11) | [day11.py](python/day11.py) | [day11.clj](clojure/day11.clj) | Classy monkeys.
 [Day 12](http://adventofcode.com/2022/day/12) | [day12.py](python/day12.py) | [day12.clj](clojure/day12.clj) | Start from the end, obviously.
 [Day 13](http://adventofcode.com/2022/day/13) | [day13.py](python/day13.py) | [day13.clj](clojure/day13.clj) | `eval` + pattern matching on types.
+[Day 14](http://adventofcode.com/2022/day/14) | [day14.py](python/day14.py) | [day14.clj](clojure/day14.clj) | Both parts in one go.
 
-<!-- [Day 14](http://adventofcode.com/2022/day/14) | [day14.py](python/day14.py) | [day14.clj](clojure/day14.clj) | -->
 <!-- [Day 15](http://adventofcode.com/2022/day/15) | [day15.py](python/day15.py) | [day15.clj](clojure/day15.clj) | -->
 <!-- [Day 16](http://adventofcode.com/2022/day/16) | [day16.py](python/day16.py) | [day16.clj](clojure/day16.clj) | -->
 <!-- [Day 17](http://adventofcode.com/2022/day/17) | [day17.py](python/day17.py) | [day17.clj](clojure/day17.clj) | -->
