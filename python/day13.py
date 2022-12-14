@@ -1,4 +1,5 @@
 from aoc import *
+from ast import literal_eval
 
 
 def compair(left, right):
@@ -17,7 +18,7 @@ def compair(left, right):
 
 def part_1(packets):
     return sum(i for i, (l, r) in enumerate(packets, 1)
-               if compair(eval(l), eval(r)) < 0)
+               if compair(literal_eval(l), literal_eval(r)) < 0)
 
 
 def divider_index(packets, target):
@@ -25,7 +26,7 @@ def divider_index(packets, target):
 
 
 def part_2(packets):
-    packets = mapl(eval, flatten(packets))
+    packets = mapl(literal_eval, flatten(packets))
     two, six = [[2]], [[6]]
     packets += [two, six]
     return divider_index(packets, two) * divider_index(packets, six)
