@@ -3,7 +3,7 @@
 
 
 (defn parse-input [filename]
-  (->> (aoc/read-input-paragraphs filename {:datatype :int})
+  (->> (aoc/read-input-paragraphs filename :int)
        (map #(reduce + %))
        (sort >)))
 

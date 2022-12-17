@@ -32,7 +32,7 @@
      guide)))
 
 (defn solve [filename]
-  (let [strategy-guide (aoc/read-input filename {:datatype :list})]
+  (let [strategy-guide (aoc/read-input filename :list)]
     [(part-1 strategy-guide)
      (part-2 strategy-guide)]))
 

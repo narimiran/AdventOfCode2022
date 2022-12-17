@@ -31,9 +31,9 @@
 
 
 (def grid
-  (->> (aoc/read-input 12 {:datatype :vector})
+  (->> (aoc/read-input 12 :vector)
        (mapv parse-line)
-       (aoc/vec2d->grid)))
+       aoc/vec2d->grid))
 
 [(travel grid 1)
  (travel grid 2)]

@@ -11,9 +11,8 @@
     [["*" val]]   #(* % (parse-long val))
     [["+" val]]   #(+ % (parse-long val))))
 
-(defn parse-monkey [monkey]
-  (let [lines (vec (aoc/parse-multiline-string monkey))
-        items (aoc/integers (lines 1))
+(defn parse-monkey [lines]
+  (let [items (aoc/integers (lines 1))
         op    (-> (lines 2)
                   (str/split #" ")
                   (#(take-last 2 %))
@@ -60,7 +59,7 @@
 
 
 (def monkeys
-  (->> (aoc/read-input 11 {:sep #"\n\n"})
+  (->> (aoc/read-input-paragraphs 11)
        (mapv parse-monkey)))
 
 [(play-game monkeys 20 true)

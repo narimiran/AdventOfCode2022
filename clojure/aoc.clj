@@ -3,29 +3,27 @@
 
 
 (defn parse-multiline-string
-  [s & {:keys [datatype sep]
-        :or {datatype :string sep #"\n"}}]
-  (->> (str/split s sep)
-       ((case datatype
+  [s & [out-type sep]]
+  (->> (str/split s (or sep #"\n"))
+       ((case out-type
           :int    (partial map parse-long)
           :list   (partial map #(str/split % #""))
           :vector (partial map vec)
-          :string identity))))
+          nil     identity))))
 
 
 (defn read-input
-  [filename & {:keys [datatype sep]
-               :or {datatype :string sep #"\n"}}]
+  [filename & [out-type sep]]
   (let [name (if (int? filename)
                (format "%02d" filename)
                filename)]
     (-> (str "inputs/" name ".txt")
         slurp
-        (parse-multiline-string {:datatype datatype :sep sep}))))
+        (parse-multiline-string out-type sep))))
 
 
 (defn read-input-line
-  [filename & {:keys [sep]}]
+  [filename & [sep]]
   (->> filename
        read-input
        first
@@ -34,10 +32,10 @@
           (partial #(str/split % sep))))))
 
 (defn read-input-paragraphs
-  [filename & {:keys [datatype]
-               :or {datatype :string}}]
-  (->> (read-input filename {:sep #"\n\n"})
-       (mapv #(parse-multiline-string % {:datatype datatype}))))
+  [filename & [out-type]]
+  (->> (read-input filename nil #"\n\n")
+       (mapv #(parse-multiline-string % out-type))))
+
 
 (defn string->digits [s]
   (->> (str/split s #"")
