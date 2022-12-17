@@ -4,13 +4,14 @@
 
 (defn parse-stacks [drawing]
   (->> drawing
+       drop-last
        aoc/transpose
        (map #(remove #{\space \[ \]} %))
        (remove empty?)
-       (cons '())
+       (cons '()) ; to have real stacks start from index 1
        vec))
 
-(defn move [stacks [amount from to] pick-multiple?]
+(defn move-boxes [stacks [amount from to] pick-multiple?]
   (let [[took remains] (split-at amount (stacks from))
         put (apply conj
                    (stacks to)
@@ -19,30 +20,18 @@
         (assoc from remains)
         (assoc to put))))
 
-(defn solve [stacks instructions can-pick-multiple?]
-  (let [move-boxes
-        (fn [acc instr] (move acc instr can-pick-multiple?))]
-    (->> instructions
-         (reduce move-boxes stacks)
-         (map first)
-         (apply str))))
+(defn operate-crane [stacks instructions pick-multiple?]
+  (->> instructions
+       (reduce #(move-boxes %1 %2 pick-multiple?) stacks)
+       (map first)
+       (apply str)))
+
+(defn solve [filename]
+  (let [[raw-stacks raw-instructions] (aoc/read-input-paragraphs filename)
+        stacks       (parse-stacks raw-stacks)
+        instructions (mapv aoc/integers raw-instructions)]
+    [(operate-crane stacks instructions false)
+     (operate-crane stacks instructions true)]))
 
 
-(def input
-  (->> (aoc/read-input 5 {:sep #"\n\n"})
-       (map aoc/parse-multiline-string)))
-
-(def stacks
-  (->> input
-       first
-       drop-last
-       parse-stacks))
-
-(def instructions
-  (->> input
-       last
-       (mapv aoc/integers)))
-
-
-[(solve stacks instructions false)
- (solve stacks instructions true)]
+(solve 5)

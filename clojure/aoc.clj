@@ -33,6 +33,11 @@
           nil identity
           (partial #(str/split % sep))))))
 
+(defn read-input-paragraphs
+  [filename & {:keys [datatype]
+               :or {datatype :string}}]
+  (->> (read-input filename {:sep #"\n\n"})
+       (mapv #(parse-multiline-string % {:datatype datatype}))))
 
 (defn string->digits [s]
   (->> (str/split s #"")

@@ -2,22 +2,22 @@
   (:require aoc))
 
 
-(defn p1 [[a b c d]]
+(defn fully-contain? [[a b c d]]
   (or (<= a c d b)
       (<= c a b d)))
 
-(defn p2 [[a b c d]]
-  (not (or (> a d) (< b c))))
+(defn overlap? [[a b c d]]
+  (or (<= c a d)
+      (<= a c b)))
 
-(defn solve [IDs overlap]
-  (->> IDs
-       (filter overlap)
-       count))
-
-
-(def assignments
-  (->> (aoc/read-input 4)
+(defn parse-input [filename]
+  (->> (aoc/read-input filename)
        (mapv #(aoc/integers % {:negative? false}))))
 
-[(solve assignments p1)
- (solve assignments p2)]
+(defn solve [filename]
+  (let [assignments-pairs (parse-input filename)]
+    [(count (filter fully-contain? assignments-pairs))
+     (count (filter overlap?       assignments-pairs))]))
+
+
+(solve 4)

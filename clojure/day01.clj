@@ -2,12 +2,15 @@
   (:require aoc))
 
 
-(def calories
-  (->> (aoc/read-input 1 {:sep #"\n\n"})
-       (map #(aoc/parse-multiline-string % {:datatype :int}))
+(defn parse-input [filename]
+  (->> (aoc/read-input-paragraphs filename {:datatype :int})
        (map #(reduce + %))
        (sort >)))
 
+(defn solve [filename]
+  (let [calories (parse-input filename)]
+    [(first calories)
+     (reduce + (take 3 calories))]))
 
-[(first calories)
- (reduce + (take 3 calories))]
+
+(solve 1)

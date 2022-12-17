@@ -17,17 +17,22 @@
        (reduce sets/intersection)
        first))
 
-(defn solve [rucksacks split-func]
+(defn priority-sum [rucksacks split-func]
   (->> rucksacks
        split-func
-       (map find-common-item)
-       (map item-priority)
-       (reduce +)))
+       (transduce
+        (comp
+         (map find-common-item)
+         (map item-priority))
+        +)))
 
-
-(def rucksacks (aoc/read-input 3))
 (def p1 #(map split-rucksack %))
 (def p2 #(partition 3 %))
 
-[(solve rucksacks p1)
- (solve rucksacks p2)]
+(defn solve [filename]
+  (let [rucksacks (aoc/read-input filename)]
+    [(priority-sum rucksacks p1)
+     (priority-sum rucksacks p2)]))
+
+
+(solve 3)
