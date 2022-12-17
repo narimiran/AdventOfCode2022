@@ -14,16 +14,15 @@
 
 (defn calc-sizes [commands]
   (->> commands
-       (reduce
-        (fn [[sizes path] cmd]
-          (match [(str/split cmd #" ")]
-            [["$" "cd" "/"]]  [sizes ["/"]]
-            [["$" "cd" ".."]] [sizes (pop path)]
-            [["$" "cd" f]]    [sizes (conj path f)]
-            [(:or ["$" "ls"]
-                  ["dir" _])] [sizes path]
-            [[val _]]         [(merge-with + sizes (go-up path val)) path]))
-        [{} []])
+       (reduce (fn [[sizes path] cmd]
+                 (match [(str/split cmd #" ")]
+                   [["$" "cd" "/"]]  [sizes ["/"]]
+                   [["$" "cd" ".."]] [sizes (pop path)]
+                   [["$" "cd" f]]    [sizes (conj path f)]
+                   [(:or ["$" "ls"]
+                         ["dir" _])] [sizes path]
+                   [[val _]]         [(merge-with + sizes (go-up path val)) path]))
+               [{} []])
        first))
 
 (defn part-1 [folder-sizes]
@@ -41,11 +40,10 @@
          (filter #(>= % to-remove))
          (apply min))))
 
+(defn solve [filename]
+  (let [folder-sizes (calc-sizes (aoc/read-input filename))]
+    [(part-1 folder-sizes)
+     (part-2 folder-sizes)]))
 
-(def folder-sizes
-  (->> 7
-       aoc/read-input
-       calc-sizes))
 
-[(part-1 folder-sizes)
- (part-2 folder-sizes)]
+(solve 7)

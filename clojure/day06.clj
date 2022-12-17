@@ -2,7 +2,7 @@
   (:require aoc))
 
 
-(defn solve [buffer length]
+(defn process [buffer length]
   (loop [pos    length
          buffer buffer]
     (if (->> buffer
@@ -11,8 +11,10 @@
       pos
       (recur (inc pos) (rest buffer)))))
 
+(defn solve [filename]
+  (let [datastream-buffer (aoc/read-input-line filename)]
+    [(process datastream-buffer 4)
+     (process datastream-buffer 14)]))
 
-(def datastream-buffer (aoc/read-input-line 6))
 
-[(solve datastream-buffer 4)
- (solve datastream-buffer 14)]
+(solve 6)

@@ -50,11 +50,10 @@
        :seen
        count))
 
+(defn solve [filename]
+  (let [motions (mapcat parse-motion (aoc/read-input filename))]
+    [(simulate motions 2)
+     (simulate motions 10)]))
 
-(def motions
-  (->> 9
-       aoc/read-input
-       (mapcat parse-motion)))
 
-[(simulate motions 2)
- (simulate motions 10)]
+(solve 9)
