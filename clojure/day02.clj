@@ -1,40 +1,56 @@
 (ns day02
-  (:require aoc))
+  (:require aoc
+            [clojure.set :as set]))
 
 
-(defn part-1 [guide]
-  (let [xa-diff     (- (int \X) (int \A))
-        shape-score (fn [pl]
-                      (inc (- (aoc/ord pl)
-                              (int \X))))]
-    (reduce
-     (fn [acc [op _ pl]]
-       (+ acc
-          (shape-score pl)
-          (case (- (aoc/ord pl) (aoc/ord op) xa-diff)
-            (2 -1) 0
-            0      3
-            (1 -2) 6)))
-     0
-     guide)))
+(defn parse-shape [v]
+  (case v
+    (\A \X) :rock
+    (\B \Y) :paper
+    (\C \Z) :scissors))
 
-(defn part-2 [guide]
-  (let [rps (fn [op]
-              (- (aoc/ord op) (int \A)))]
-    (reduce
-     (fn [acc [op _ pl]]
-       (+ acc
-          (case (first pl)
-            \X (+ 0 1 (mod (dec (rps op)) 3))
-            \Y (+ 3 1           (rps op))
-            \Z (+ 6 1 (mod (inc (rps op)) 3)))))
-     0
-     guide)))
+(defn parse-outcome [v]
+  (case v
+    \X :lose
+    \Y :draw
+    \Z :win))
+
+(def winning {:rock     :scissors
+              :paper    :rock
+              :scissors :paper})
+
+(def losing (set/map-invert winning))
+
+(def points {:rock 1 :paper 2 :scissors 3
+             :lose 0 :draw 3 :win 6})
+
+(defn p1-rules [line]
+  (let [[op pl] (map parse-shape line)
+        outcome (condp = op
+                  (winning pl) :win
+                  (losing pl)  :lose
+                               :draw)]
+    (+ (points pl)
+       (points outcome))))
+
+(defn p2-rules [[op' outcome']]
+  (let [op      (parse-shape op')
+        outcome (parse-outcome outcome')
+        pl      (case outcome
+                  :draw op
+                  :lose (winning op)
+                  :win  (losing op))]
+    (+ (points pl)
+       (points outcome))))
+
+(defn play [rules guide]
+  (transduce (map rules) + guide))
 
 (defn solve [filename]
-  (let [strategy-guide (aoc/read-input filename :list)]
-    [(part-1 strategy-guide)
-     (part-2 strategy-guide)]))
+  (let [strategy-guide (->> (aoc/read-input filename)
+                            (mapv #(take-nth 2 %)))]
+    [(play p1-rules strategy-guide)
+     (play p2-rules strategy-guide)]))
 
 
 (solve 2)
