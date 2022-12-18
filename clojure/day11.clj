@@ -45,7 +45,7 @@
   (reduce monkey-play monkeys (range (count monkeys))))
 
 (defn play-game [monkeys rounds p1?]
-  (let [lcm (apply * (map :divisor monkeys))
+  (let [lcm (reduce * (map :divisor monkeys))
         reducer (if p1? #(quot % 3) #(rem % lcm))]
     (->> monkeys
          (mapv #(assoc % :reducer reducer))
@@ -55,7 +55,7 @@
          (map :inspected)
          (sort >)
          (take 2)
-         (apply *))))
+         (reduce *))))
 
 
 (def monkeys

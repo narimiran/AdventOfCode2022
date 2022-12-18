@@ -11,9 +11,9 @@
     [x y]))
 
 (defn add-floor [rocks]
-  (let [floor-y (+ 2 (apply max (map second rocks)))
+  (let [floor-y (+ 2 (reduce max (map second rocks)))
         floor (for [x (range (- start-x floor-y) (+ start-x floor-y 1))] [x floor-y])]
-    (apply conj rocks floor)))
+    (reduce conj rocks floor)))
 
 (defn drop-grain [settled]
   (loop [[x y] [start-x 0]]
@@ -35,7 +35,7 @@
           (conj [x y]))))
 
 (defn part-1 [rocks]
-  (let [floor (apply max (map second rocks))]
+  (let [floor (reduce max (map second rocks))]
     (loop [settled rocks]
       (let [[x y] (drop-grain settled)]
         (if (= y (dec floor))

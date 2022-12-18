@@ -38,7 +38,7 @@
     (->> folder-sizes
          vals
          (filter #(>= % to-remove))
-         (apply min))))
+         (reduce min))))
 
 (defn solve [filename]
   (let [folder-sizes (calc-sizes (aoc/read-input filename))]

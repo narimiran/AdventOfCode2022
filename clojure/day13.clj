@@ -31,7 +31,7 @@
   (let [two [[2]]
         six [[6]]]
     (->> (conj packets [two six])
-         (apply concat)
+         (reduce concat)
          (#(* (divider-index % two)
               (divider-index % six))))))
 

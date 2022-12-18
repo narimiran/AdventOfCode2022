@@ -13,9 +13,9 @@
 
 (defn move-boxes [stacks [amount from to] pick-multiple?]
   (let [[took remains] (split-at amount (stacks from))
-        put (apply conj
-                   (stacks to)
-                   (if pick-multiple? (reverse took) took))]
+        put (reduce conj
+                    (stacks to)
+                    (if pick-multiple? (reverse took) took))]
     (-> stacks
         (assoc from remains)
         (assoc to put))))

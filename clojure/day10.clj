@@ -8,7 +8,7 @@
    (fn [acc line]
      (let [[instr amt] (str/split line #" ")]
        (if (= instr "addx")
-         (conj acc 0 (Integer/parseInt amt))
+         (conj acc 0 (parse-long amt))
          (conj acc 0))))
    []
    lines))
@@ -16,7 +16,7 @@
 (defn part-1 [x-positions]
   (->> (range 20 221 40)
        (map #(* % (nth x-positions (dec %))))
-       (apply +)))
+       (reduce +)))
 
 (defn part-2 [x-positions]
   (->> x-positions
