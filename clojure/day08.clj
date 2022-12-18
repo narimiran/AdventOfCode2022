@@ -8,35 +8,31 @@
        count
        inc))
 
-(defn go-through-grid [forest]
-  (let [hor    forest
-        vert   (aoc/transpose forest)
-        size   (count forest)
-        to-int {true 1 nil 0}]
-    (reduce
-     (fn [[visible-from-outside high-score] [x y]]
-       (let [row    (hor y)
-             col    (vert x)
-             height (row x)
-             dirs   [(rseq (subvec row 0 x)) ; left
-                     (subvec row (inc x))    ; right
-                     (rseq (subvec col 0 y)) ; up
-                     (subvec col (inc y))]   ; down
-             visible-distances (map #(viewing-distance height %) dirs)
-             dir-sizes         (map count dirs)
-             visible-trees     (map min visible-distances dir-sizes)]
-         [(+ visible-from-outside
-             (to-int (some pos? (map - visible-distances dir-sizes))))
-          (max high-score (apply * visible-trees))]))
-     [0 0]
-     (for [x (range size)
-           y (range size)]
-       [x y]))))
+(defn go-through-forrest [height-map]
+  (let [hor  height-map
+        vert (aoc/transpose height-map)
+        size (count height-map)]
+    (for [x (range size)
+          y (range size)]
+      (let [row  (hor y)
+            col  (vert x)
+            dirs [(rseq (subvec row 0 x)) ; left
+                  (subvec row (inc x))    ; right
+                  (rseq (subvec col 0 y)) ; up
+                  (subvec col (inc y))]   ; down
+            dir-sizes (map count dirs)
+            height    (row x)
+            visible-distances (map #(viewing-distance height %) dirs)
+            visible-trees     (map min visible-distances dir-sizes)]
+        {:is-visible?  (some pos? (map - visible-distances dir-sizes))
+         :scenic-score (reduce * visible-trees)}))))
 
 (defn solve [filename]
-  (let [height-map
-        (mapv aoc/string->digits (aoc/read-input filename))]
-    (go-through-grid height-map)))
+  (let [height-map (->> (aoc/read-input filename)
+                        (mapv aoc/string->digits))
+        results (go-through-forrest height-map)]
+    [(->> results (filter :is-visible?) count)
+     (->> results (map :scenic-score) (reduce max))]))
 
 
 (solve 8)
