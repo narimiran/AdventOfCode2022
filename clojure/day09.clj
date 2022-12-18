@@ -5,17 +5,16 @@
 
 
 (defn parse-motion [line]
-  (->> line
-       (#(str/split % #" "))
+  (->> (str/split line #" ")
        ((fn [[dir amount]]
           (repeat (parse-long amount) dir)))))
 
-(defn move-head [head cmd]
-  (let [dirs {"U" [0 -1]
-              "D" [0  1]
-              "L" [-1 0]
-              "R" [1  0]}]
-    (mapv + head (dirs cmd))))
+(defn move-head [[x y] cmd]
+  (case cmd
+    "U" [x (dec y)]
+    "D" [x (inc y)]
+    "L" [(dec x) y]
+    "R" [(inc x) y]))
 
 (defn follow [[hx hy] [tx ty]]
   (let [dx (- hx tx)
@@ -38,22 +37,23 @@
       (move-head cmd)
       (move-tail tail)))
 
-(defn simulate [motions length]
-  (->> motions
-       (reduce
-        (fn [{:keys [rope seen]} cmd]
-          (let [new-pos (move-rope rope cmd)]
-            {:rope new-pos
-             :seen (conj seen (peek new-pos))}))
-        {:rope (vec (repeat length [0 0]))
-         :seen #{}})
-       :seen
-       count))
+(defn simulate [motions]
+  (reduce
+   (fn [{:keys [rope seen-2 seen-10]} cmd]
+     (let [new-pos (move-rope rope cmd)]
+       {:rope    new-pos
+        :seen-2  (conj seen-2  (second new-pos))
+        :seen-10 (conj seen-10 (peek new-pos))}))
+   {:rope (vec (repeat 10 [0 0]))
+    :seen-2  #{}
+    :seen-10 #{}}
+   motions))
 
 (defn solve [filename]
-  (let [motions (mapcat parse-motion (aoc/read-input filename))]
-    [(simulate motions 2)
-     (simulate motions 10)]))
+  (let [motions (mapcat parse-motion (aoc/read-input filename))
+        rope (simulate motions)]
+    [(count (:seen-2  rope))
+     (count (:seen-10 rope))]))
 
 
 (solve 9)
