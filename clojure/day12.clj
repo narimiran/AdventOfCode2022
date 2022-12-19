@@ -15,9 +15,9 @@
   (let [start (find-val grid -14)
         end   (find-val grid -28)
         grid  (merge grid {start 0 end 25})]
-    (loop [seen #{end}
-           queue [[0 end]]]
-      (let [[steps curr] (first queue)]
+    (loop [seen      #{end}
+           [hd & tl] [[0 end]]]
+      (let [[steps curr] hd]
         (if (and (= (grid curr) 0)
                  (or (= part 2) (= curr start)))
           steps
@@ -27,13 +27,19 @@
                             (aoc/neighbours curr 4))
                 nexts (map #(vector (inc steps) %) nbs)]
             (recur (reduce conj seen nbs)
-                   (reduce conj (vec (rest queue)) nexts))))))))
+                   (reduce conj (vec tl) nexts))))))))
 
-
-(def grid
-  (->> (aoc/read-input 12 :vector)
+(defn parse-input [input]
+  (->> (aoc/read-input input :vector)
        (mapv parse-line)
        aoc/vec2d->grid))
 
-[(travel grid 1)
- (travel grid 2)]
+(defn solve
+  ([] (solve 12))
+  ([input]
+   (let [grid (parse-input input)]
+     [(travel grid 1)
+      (travel grid 2)])))
+
+
+(solve)

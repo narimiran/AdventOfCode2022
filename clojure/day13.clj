@@ -7,24 +7,23 @@
     (and (number? l) (number? r))     (- l r)
     (and (number? l) (sequential? r)) (compair [l] r)
     (and (sequential? l) (number? r)) (compair l [r])
-    :else (loop [diffs (map compair l r)]
-            (case (first diffs)
+    :else (loop [[hd & tl] (map compair l r)]
+            (case hd
               nil (- (count l) (count r))
-              0   (recur (rest diffs))
-              (first diffs)))))
+              0   (recur tl)
+              hd))))
 
 (defn part-1 [packets]
   (->> packets
-       (reduce
-        (fn [[acc idx] [l r]]
-          [(if (neg? (compair l r)) (+ acc idx) acc)
-           (inc idx)])
-        [0 1])
+       (reduce (fn [[acc idx] [l r]]
+                 [(if (neg? (compair l r)) (+ acc idx) acc)
+                  (inc idx)])
+               [0 1])
        first))
 
 (defn divider-index [packets target]
   (->> packets
-       (filter #(<= (compair % target) 0))
+       (remove #(pos? (compair % target)))
        count))
 
 (defn part-2 [packets]
@@ -35,13 +34,19 @@
          (#(* (divider-index % two)
               (divider-index % six))))))
 
-
-(def packets
-  (->> 13
+(defn parse-input [input]
+  (->> input
        aoc/read-input
        (remove empty?)
        (mapv read-string)
        (partition 2)))
 
-[(part-1 packets)
- (part-2 packets)]
+(defn solve
+  ([] (solve 13))
+  ([input]
+   (let [packets (parse-input input)]
+     [(part-1 packets)
+      (part-2 packets)])))
+
+
+(solve)

@@ -48,9 +48,8 @@
       count
       (- (count rocks))))
 
-
-(def rocks
-  (->> 14
+(defn parse-input [input]
+  (->> input
        aoc/read-input
        (map aoc/integers)
        (map #(partition 2 %))   ; points
@@ -61,5 +60,12 @@
        set
        add-floor))
 
-[(part-1 rocks)
- (part-2 rocks)]
+(defn solve
+  ([] (solve 14))
+  ([input]
+   (let [rocks (parse-input input)]
+     [(part-1 rocks)
+      (part-2 rocks)])))
+
+
+(solve)

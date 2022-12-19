@@ -1,6 +1,7 @@
 (ns solutions-tests
   (:require day01 day02 day03 day04 day05
             day06 day07 day08 day09 day10
+            day11 day12 day13 day14 day15
             [clojure.test :refer [deftest are run-tests]]))
 
 
@@ -44,6 +45,11 @@
 (check-day 8 [21 8] [1829 291840])
 (check-day 9 [13 1] [6197 2562])
 (check-day 10 [13140 test-output-10] [14320 real-output-10])
+(check-day 11 [10605 2713310158] [66802 21800916620])
+(check-day 12 [31 29] [352 345])
+(check-day 13 [13 140] [5013 25038])
+(check-day 14 [24 93] [1003 25771])
+(check-day 15 [26 56000011] [5299855 13615843289729])
 
 
 (run-tests)

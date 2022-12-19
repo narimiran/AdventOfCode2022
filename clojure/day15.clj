@@ -28,27 +28,32 @@
          edges)]
     (if (< val (first (peek edges))) val -1)))
 
-(defn part-1 [sensors]
-  (let [seen  (seen-in-row sensors 2000000)
+(defn part-1 [sensors row]
+  (let [seen  (seen-in-row sensors row)
         [a _] (first seen)
         [_ b] (peek seen)]
     (- b a)))
 
-(defn part-2 [sensors]
-  (loop [row 4000000]
+(defn part-2 [sensors limit]
+  (loop [row limit]
     (let [edges (seen-in-row sensors row)
           col   (find-a-hole edges)]
       (if (pos? col)
         (+ (* 4000000 col) row)
         (recur (dec row))))))
 
+(defn solve
+  ([] (solve 15))
+  ([input & [limit]]
+   (let [limit   (if (= (str input) "15")
+                   4000000
+                   (or limit 20))
+         sensors (->> input
+                      aoc/read-input
+                      (map aoc/integers)
+                      (map find-radius))]
+     [(part-1 sensors (quot limit 2))
+      (part-2 sensors limit)])))
 
-(def sensors
-  (->> 15
-       aoc/read-input
-       (map aoc/integers)
-       (map find-radius)))
 
-
-[(part-1 sensors)
- (part-2 sensors)]
+(solve)

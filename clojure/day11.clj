@@ -25,9 +25,7 @@
      :items     items
      :operation op
      :divisor   divisor
-     :test      (partial #(if (zero? (rem % divisor))
-                            if-true
-                            if-false))}))
+     :test      (partial #(if (zero? (rem % divisor)) if-true if-false))}))
 
 (defn monkey-play [monkeys curr]
   (loop [monkeys monkeys]
@@ -44,9 +42,9 @@
 (defn play-round [monkeys]
   (reduce monkey-play monkeys (range (count monkeys))))
 
-(defn play-game [monkeys rounds p1?]
-  (let [lcm (reduce * (map :divisor monkeys))
-        reducer (if p1? #(quot % 3) #(rem % lcm))]
+(defn play-game [monkeys rounds divide-worry?]
+  (let [lcm     (reduce * (map :divisor monkeys))
+        reducer (if divide-worry? #(quot % 3) #(rem % lcm))]
     (->> monkeys
          (mapv #(assoc % :reducer reducer))
          (iterate play-round)
@@ -57,10 +55,17 @@
          (take 2)
          (reduce *))))
 
-
-(def monkeys
-  (->> (aoc/read-input-paragraphs 11)
+(defn parse-input [input]
+  (->> input
+       aoc/read-input-paragraphs
        (mapv parse-monkey)))
 
-[(play-game monkeys 20 true)
- (play-game monkeys 10000 false)]
+(defn solve
+  ([] (solve 11))
+  ([input]
+   (let [monkeys (parse-input input)]
+     [(play-game monkeys 20 true)
+      (play-game monkeys 10000 false)])))
+
+
+(solve)
