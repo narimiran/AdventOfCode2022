@@ -26,14 +26,16 @@
        (partition 40)
        (map str/join)))
 
-(defn solve [filename]
-  (let [x-positions
-        (->> filename
-             aoc/read-input
-             read-instructions
-             (reductions + 1))] ; x starts at 1
-    [(part-1 x-positions)
-     (part-2 x-positions)]))
+(defn solve
+  ([] (solve 10))
+  ([input]
+   (let [x-positions
+         (->> input
+              aoc/read-input
+              read-instructions
+              (reductions + 1))] ; x starts at 1
+     [(part-1 x-positions)
+      (part-2 x-positions)])))
 
 
 (solve 10)

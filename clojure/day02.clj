@@ -46,11 +46,13 @@
 (defn play [rules guide]
   (transduce (map rules) + guide))
 
-(defn solve [filename]
-  (let [strategy-guide (->> (aoc/read-input filename)
-                            (mapv #(take-nth 2 %)))]
-    [(play p1-rules strategy-guide)
-     (play p2-rules strategy-guide)]))
+(defn solve
+  ([] (solve 2))
+  ([input]
+   (let [strategy-guide (->> (aoc/read-input input)
+                             (mapv #(take-nth 2 %)))]
+     [(play p1-rules strategy-guide)
+      (play p2-rules strategy-guide)])))
 
 
-(solve 2)
+(solve)

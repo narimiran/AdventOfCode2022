@@ -13,18 +13,18 @@
 
 
 (defn read-input
-  [filename & [out-type sep]]
-  (let [name (if (int? filename)
-               (format "%02d" filename)
-               filename)]
+  [input & [out-type sep]]
+  (let [name (if (int? input)
+               (format "%02d" input)
+               input)]
     (-> (str "inputs/" name ".txt")
         slurp
         (parse-multiline-string out-type sep))))
 
 
 (defn read-input-line
-  [filename & [sep]]
-  (->> filename
+  [input & [sep]]
+  (->> input
        read-input
        first
        ((case sep
@@ -32,8 +32,8 @@
           (partial #(str/split % sep))))))
 
 (defn read-input-paragraphs
-  [filename & [out-type]]
-  (->> (read-input filename nil #"\n\n")
+  [input & [out-type]]
+  (->> (read-input input nil #"\n\n")
        (mapv #(parse-multiline-string % out-type))))
 
 

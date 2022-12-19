@@ -11,10 +11,12 @@
       pos
       (recur (inc pos) (rest buffer)))))
 
-(defn solve [filename]
-  (let [datastream-buffer (aoc/read-input-line filename)]
-    [(process datastream-buffer 4)
-     (process datastream-buffer 14)]))
+(defn solve
+  ([] (solve 6))
+  ([input]
+   (let [datastream-buffer (aoc/read-input-line input)]
+     [(process datastream-buffer 4)
+      (process datastream-buffer 14)])))
 
 
-(solve 6)
+(solve)

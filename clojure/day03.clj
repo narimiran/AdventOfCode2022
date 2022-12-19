@@ -29,10 +29,12 @@
 (def p1 #(map split-rucksack %))
 (def p2 #(partition 3 %))
 
-(defn solve [filename]
-  (let [rucksacks (aoc/read-input filename)]
-    [(priority-sum rucksacks p1)
-     (priority-sum rucksacks p2)]))
+(defn solve
+  ([] (solve 3))
+  ([input]
+   (let [rucksacks (aoc/read-input input)]
+     [(priority-sum rucksacks p1)
+      (priority-sum rucksacks p2)])))
 
 
-(solve 3)
+(solve)

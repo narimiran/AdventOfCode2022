@@ -27,12 +27,14 @@
         {:is-visible?  (some pos? (map - visible-distances dir-sizes))
          :scenic-score (reduce * visible-trees)}))))
 
-(defn solve [filename]
-  (let [height-map (->> (aoc/read-input filename)
-                        (mapv aoc/string->digits))
-        results (go-through-forrest height-map)]
-    [(->> results (filter :is-visible?) count)
-     (->> results (map :scenic-score) (reduce max))]))
+(defn solve
+  ([] (solve 8))
+  ([input]
+   (let [height-map (->> (aoc/read-input input)
+                         (mapv aoc/string->digits))
+         results (go-through-forrest height-map)]
+     [(->> results (filter :is-visible?) count)
+      (->> results (map :scenic-score) (reduce max))])))
 
 
-(solve 8)
+(solve)

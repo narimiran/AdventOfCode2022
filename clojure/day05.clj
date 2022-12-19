@@ -26,12 +26,14 @@
        (map first)
        (apply str)))
 
-(defn solve [filename]
-  (let [[raw-stacks raw-instructions] (aoc/read-input-paragraphs filename)
-        stacks       (parse-stacks raw-stacks)
-        instructions (mapv aoc/integers raw-instructions)]
-    [(operate-crane stacks instructions false)
-     (operate-crane stacks instructions true)]))
+(defn solve
+  ([] (solve 5))
+  ([input]
+   (let [[raw-stacks raw-instructions] (aoc/read-input-paragraphs input)
+         stacks       (parse-stacks raw-stacks)
+         instructions (mapv aoc/integers raw-instructions)]
+     [(operate-crane stacks instructions false)
+      (operate-crane stacks instructions true)])))
 
 
-(solve 5)
+(solve)

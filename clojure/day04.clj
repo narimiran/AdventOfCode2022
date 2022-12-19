@@ -10,14 +10,16 @@
   (or (<= c a d)
       (<= a c b)))
 
-(defn parse-input [filename]
-  (->> (aoc/read-input filename)
+(defn parse-input [input]
+  (->> (aoc/read-input input)
        (mapv #(aoc/integers % {:negative? false}))))
 
-(defn solve [filename]
-  (let [assignments-pairs (parse-input filename)]
-    [(count (filter fully-contain? assignments-pairs))
-     (count (filter overlap?       assignments-pairs))]))
+(defn solve
+  ([] (solve 4))
+  ([input]
+   (let [assignments-pairs (parse-input input)]
+     [(count (filter fully-contain? assignments-pairs))
+      (count (filter overlap?       assignments-pairs))])))
 
 
-(solve 4)
+(solve)

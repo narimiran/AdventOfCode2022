@@ -40,10 +40,12 @@
          (filter #(>= % to-remove))
          (reduce min))))
 
-(defn solve [filename]
-  (let [folder-sizes (calc-sizes (aoc/read-input filename))]
-    [(part-1 folder-sizes)
-     (part-2 folder-sizes)]))
+(defn solve
+  ([] (solve 7))
+  ([input]
+   (let [folder-sizes (calc-sizes (aoc/read-input input))]
+     [(part-1 folder-sizes)
+      (part-2 folder-sizes)])))
 
 
-(solve 7)
+(solve)

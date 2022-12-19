@@ -49,11 +49,13 @@
     :seen-10 #{}}
    motions))
 
-(defn solve [filename]
-  (let [motions (mapcat parse-motion (aoc/read-input filename))
-        rope (simulate motions)]
-    [(count (:seen-2  rope))
-     (count (:seen-10 rope))]))
+(defn solve
+  ([] (solve 9))
+  ([input]
+   (let [motions (mapcat parse-motion (aoc/read-input input))
+         rope (simulate motions)]
+     [(count (:seen-2  rope))
+      (count (:seen-10 rope))])))
 
 
-(solve 9)
+(solve)
