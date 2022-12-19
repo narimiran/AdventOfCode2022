@@ -52,11 +52,9 @@
   (->> input
        aoc/read-input
        (map aoc/integers)
-       (map #(partition 2 %))   ; points
-       (map #(partition 2 1 %)) ; paths
-       (apply concat)
-       (map #(apply path->rock %))
-       (apply concat)
+       (map #(partition 2 %))      ; points
+       (mapcat #(partition 2 1 %)) ; paths
+       (mapcat #(apply path->rock %))
        set
        add-floor))
 
