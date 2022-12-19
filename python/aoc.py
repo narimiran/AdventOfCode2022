@@ -93,6 +93,11 @@ def neighbours(x, y, amount=4):
              amount == 9):
             yield (x+dx, y+dy)
 
+def neighbours_3d(x, y, z):
+    yield from [(x-1, y, z), (x+1, y, z),
+                (x, y-1, z), (x, y+1, z),
+                (x, y, z-1), (x, y, z+1)]
+
 
 def list2grid(lines, pred=None):
     return {(x, y): val

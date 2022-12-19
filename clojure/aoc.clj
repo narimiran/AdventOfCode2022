@@ -74,6 +74,11 @@
           9 true)]
     [(+ x dx) (+ y dy)]))
 
+(defn neighbours-3d [[x y z]]
+  [[(dec x) y z] [(inc x) y z]
+   [x (dec y) z] [x (inc y) z]
+   [x y (dec z)] [x y (inc z)]])
+
 
 (defn vec2d->grid [v]
   (into {}
