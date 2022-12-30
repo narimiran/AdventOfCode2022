@@ -86,12 +86,22 @@ def bin2int(s):
 
 
 def neighbours(x, y, amount=4):
-    assert amount in {4, 8, 9}
+    assert amount in {4, 5, 8, 9}
     for dy, dx in product((-1, 0, 1), repeat=2):
         if ((amount == 4 and abs(dx) != abs(dy)) or
+            (amount == 5 and abs(dx) + abs(dy) <= 1) or
             (amount == 8 and not dx == dy == 0) or
              amount == 9):
             yield (x+dx, y+dy)
+
+def complex_neighbours(pt, amount=4):
+    assert amount in {4, 5, 8, 9}
+    for dy, dx in product((-1, 0, 1), repeat=2):
+        if ((amount == 4 and abs(dx) != abs(dy)) or
+            (amount == 5 and abs(dx) + abs(dy) <= 1) or
+            (amount == 8 and not dx == dy == 0) or
+             amount == 9):
+            yield pt + dx + dy*1j
 
 def neighbours_3d(x, y, z):
     yield from [(x-1, y, z), (x+1, y, z),
