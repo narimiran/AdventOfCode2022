@@ -1,4 +1,7 @@
 {:paths ["clojure" "clojure/tests"]
  :deps {org.clojure/clojure {:mvn/version "1.11.1"}
-        org.clojure/core.match {:mvn/version "1.0.0"}
-        criterium/criterium {:mvn/version "0.4.6"}}}
+        org.clojure/core.match {:mvn/version "1.0.0"}}
+ :aliases
+ {:profile {:jvm-opts ["-Djdk.attach.allowAttachSelf"]
+            :extra-deps {criterium/criterium {:mvn/version "0.4.6"}
+                         com.clojure-goes-fast/clj-async-profiler {:mvn/version "1.0.3"}}}}}

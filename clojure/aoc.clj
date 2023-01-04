@@ -8,7 +8,7 @@
        ((case out-type
           :int    (partial map parse-long)
           :list   (partial map #(str/split % #""))
-          :vector (partial map vec)
+          :vector (partial mapv vec)
           nil     identity))))
 
 
@@ -64,12 +64,16 @@
         (re-seq (if negative? #"-?\d+" #"\d+") s)))
 
 
+(defn pt+ [[ax ay] [bx by]]
+  [(+ ax bx) (+ ay by)])
+
 (defn neighbours [[x y] amount]
   (for [dx [-1 0 1]
         dy [-1 0 1]
         :when
         (case amount
           4 (not= (abs dx) (abs dy))
+          5 (<= (+ (abs dx) (abs dy)) 1)
           8 (not= dx dy 0)
           9 true)]
     [(+ x dx) (+ y dy)]))
@@ -82,6 +86,6 @@
 
 (defn vec2d->grid [v]
   (into {}
-        (for [x (range (count (first v)))
-              y (range (count v))]
-          [[x y] ((v y) x)])))
+        (for [[y line] (map-indexed vector v)
+              [x char] (map-indexed vector line)]
+          [[x y] char])))
