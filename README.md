@@ -47,9 +47,9 @@ Day 00: Helper file                           | [aoc.py](python/aoc.py)     | [a
 [Day 18](http://adventofcode.com/2022/day/18) | [day18.py](python/day18.py) | [day18.clj](clojure/day18.clj) | Cubes are just points in 3D.
 [Day 20](http://adventofcode.com/2022/day/20) | [day20.py](python/day20.py) | [day20.clj](clojure/day20.clj) | The traditional "just use `deque.rotate`" task.
 [Day 21](http://adventofcode.com/2022/day/21) | [day21.py](python/day21.py) | [day21.clj](clojure/day21.clj) | DFS and binary search.
+[Day 22](http://adventofcode.com/2022/day/22) | [day22.py](python/day22.py) | [day22.clj](clojure/day22.clj) | Hardcoded the wrapping rules for my input. Sorry, not sorry.
 [Day 23](http://adventofcode.com/2022/day/23) | [day23.py](python/day23.py) | [day23.clj](clojure/day23.clj) | More complex numbers.
 [Day 24](http://adventofcode.com/2022/day/24) | [day24.py](python/day24.py) | [day24.clj](clojure/day24.clj) | Set operations for the win.
 [Day 25](http://adventofcode.com/2022/day/25) | [day25.py](python/day25.py) | [day25.clj](clojure/day25.clj) | `+/- 2` for an easy conversion.
 
 <!-- [Day 19](http://adventofcode.com/2022/day/19) | [day19.py](python/day19.py) | [day19.clj](clojure/day19.clj) | -->
-<!-- [Day 22](http://adventofcode.com/2022/day/22) | [day22.py](python/day22.py) | [day22.clj](clojure/day22.clj) | -->

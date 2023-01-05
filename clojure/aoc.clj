@@ -84,8 +84,11 @@
    [x y (dec z)] [x y (inc z)]])
 
 
-(defn vec2d->grid [v]
-  (into {}
-        (for [[y line] (map-indexed vector v)
-              [x char] (map-indexed vector line)]
-          [[x y] char])))
+(defn vec2d->grid
+  ([v] (vec2d->grid v identity))
+  ([v pred]
+   (into {}
+         (for [[y line] (map-indexed vector v)
+               [x char] (map-indexed vector line)
+               :when (pred char)]
+           [[x y] char]))))
