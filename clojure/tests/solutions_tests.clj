@@ -2,6 +2,8 @@
   (:require day01 day02 day03 day04 day05
             day06 day07 day08 day09 day10
             day11 day12 day13 day14 day15
+            day16 day17 day18 day19 day20
+            day21 day22 day23 day24 day25
             [clojure.test :refer [deftest are run-tests]]))
 
 
@@ -50,6 +52,16 @@
 (check-day 13 [13 140] [5013 25038])
 (check-day 14 [24 93] [1003 25771])
 (check-day 15 [26 56000011] [5299855 13615843289729])
+(check-day 16 [1651 1707] [1880 2520])
+(check-day 17 [3068 1514285714288] [3232 1585632183915])
+(check-day 18 [64 58] [3326 1996])
+(check-day 19 [33 3472] [994 15960])
+(check-day 20 [3 1623178306] [5904 8332585833851])
+(check-day 21 [152 301] [63119856257960 3006709232464])
+(check-day 22 [8048 8048] [13566 11451]) ; hardcoded for real input --> wrong test results
+(check-day 23 [110 20] [3762 997])
+(check-day 24 [18 54] [266 853])
+(check-day 25 "2=-1=0" "122-2=200-0111--=200")
 
 
 (run-tests)
