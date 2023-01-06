@@ -4,6 +4,9 @@
             [clojure.math :as math]))
 
 
+(defrecord Rope [rope seen-2 seen-10])
+
+
 (defn parse-motion [line]
   (->> (str/split line #" ")
        ((fn [[dir amount]]
@@ -41,12 +44,10 @@
   (reduce
    (fn [{:keys [rope seen-2 seen-10]} cmd]
      (let [new-pos (move-rope rope cmd)]
-       {:rope    new-pos
-        :seen-2  (conj seen-2  (second new-pos))
-        :seen-10 (conj seen-10 (peek new-pos))}))
-   {:rope (vec (repeat 10 [0 0]))
-    :seen-2  #{}
-    :seen-10 #{}}
+       (->Rope new-pos
+               (conj seen-2  (second new-pos))
+               (conj seen-10 (peek new-pos)))))
+   (->Rope (vec (repeat 10 [0 0])) #{} #{})
    motions))
 
 (defn solve

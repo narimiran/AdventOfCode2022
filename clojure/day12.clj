@@ -2,14 +2,8 @@
   (:require aoc))
 
 
-(defn parse-line [line]
-  (mapv #(-(int %) (int \a)) line))
-
 (defn find-val [grid height]
-  (->> grid
-       (filter #(= height (val %)))
-       first
-       key))
+  (some #(when (= height (val %)) (key %)) grid))
 
 (defn travel [grid part]
   (let [start (find-val grid -14)
@@ -26,8 +20,11 @@
                                       (dec (grid curr))))
                             (aoc/neighbours curr 4))
                 nexts (map #(vector (inc steps) %) nbs)]
-            (recur (reduce conj seen nbs)
-                   (reduce conj (vec tl) nexts))))))))
+            (recur (into seen nbs)
+                   (into (vec tl) nexts))))))))
+
+(defn parse-line [line]
+  (mapv #(- (int %) (int \a)) line))
 
 (defn parse-input [input]
   (->> (aoc/read-input input :vector)

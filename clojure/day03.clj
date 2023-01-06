@@ -1,6 +1,6 @@
 (ns day03
   (:require aoc
-            [clojure.set :as sets]
+            [clojure.set :as set]
             [clojure.string :as str]))
 
 
@@ -8,13 +8,13 @@
 (defn item-priority [l] (str/index-of letters l))
 
 (defn split-rucksack [rucksack]
-  (let [mid (quot (count rucksack) 2)]
+  (let [mid (/ (count rucksack) 2)]
     (split-at mid rucksack)))
 
 (defn find-common-item [group]
   (->> group
        (map set)
-       (reduce sets/intersection)
+       (reduce set/intersection)
        first))
 
 (defn priority-sum [rucksacks split-func]

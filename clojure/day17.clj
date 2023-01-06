@@ -32,12 +32,12 @@
     (loop [[r m max-y skipped seen tower] [0 0 0 0 {} tower]]
       (if (>= r rounds) (+ max-y skipped)
           (let [init-pos [2 (+ max-y 4)]
-                rock     (map #(aoc/pt+ init-pos %) (nth rocks (mod r R))) ]
+                rock     (map #(aoc/pt+ init-pos %) (nth rocks (mod r R)))]
             (recur
              (loop [rock rock
                     m m]
                (let [move-fn    (if (= \< (nth movements (mod m M)))
-                                    move-left move-right)
+                                  move-left move-right)
                      rock'      (map move-fn rock)
                      moved-rock (if (and (inbounds? rock')
                                          (not-clashes? rock' tower))
@@ -52,9 +52,8 @@
                                           dedupe)
                          t-hash      [(peaks tower max-y) (mod r R) (mod m M)]
                          r           (inc r)
-                         [r skipped] (if (contains? seen t-hash)
-                                       (let [[r1 y1] (seen t-hash)
-                                             dr (- r r1)
+                         [r skipped] (if-let [[r1 y1] (seen t-hash)]
+                                       (let [dr (- r r1)
                                              dy (- max-y y1)
                                              skipped-periods (quot (- rounds r) dr)]
                                          [(+ r (* skipped-periods dr))

@@ -26,7 +26,7 @@
              (reduced (dec a))))
          0
          edges)]
-    (if (< val (first (peek edges))) val -1)))
+    (when (< val (first (peek edges))) val)))
 
 (defn part-1 [sensors row]
   (let [seen  (seen-in-row sensors row)
@@ -38,7 +38,7 @@
   (loop [row limit]
     (let [edges (seen-in-row sensors row)
           col   (find-a-hole edges)]
-      (if (pos? col)
+      (if (some? col)
         (+ (* 4000000 col) row)
         (recur (dec row))))))
 
@@ -52,7 +52,7 @@
                       aoc/read-input
                       (map aoc/integers)
                       (map find-radius))]
-     [(part-1 sensors (quot limit 2))
+     [(part-1 sensors (/ limit 2))
       (part-2 sensors limit)])))
 
 

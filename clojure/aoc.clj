@@ -72,7 +72,7 @@
         dy [-1 0 1]
         :when
         (case amount
-          4 (not= (abs dx) (abs dy))
+          4 (odd? (- dx dy))
           5 (<= (+ (abs dx) (abs dy)) 1)
           8 (not= dx dy 0)
           9 true)]

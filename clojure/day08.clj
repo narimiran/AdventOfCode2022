@@ -10,22 +10,19 @@
 
 (defn go-through-forrest [height-map]
   (let [hor  height-map
-        vert (aoc/transpose height-map)
-        size (count height-map)]
-    (for [x (range size)
-          y (range size)]
-      (let [row  (hor y)
-            col  (vert x)
-            dirs [(rseq (subvec row 0 x)) ; left
-                  (subvec row (inc x))    ; right
-                  (rseq (subvec col 0 y)) ; up
-                  (subvec col (inc y))]   ; down
-            dir-sizes (map count dirs)
-            height    (row x)
-            visible-distances (map #(viewing-distance height %) dirs)
-            visible-trees     (map min visible-distances dir-sizes)]
-        {:is-visible?  (some pos? (map - visible-distances dir-sizes))
-         :scenic-score (reduce * visible-trees)}))))
+        vert (aoc/transpose height-map)]
+    (for [[y row] (map-indexed vector hor)
+          [x col] (map-indexed vector vert)
+          :let [dirs [(rseq (subvec row 0 x)) ; left
+                      (subvec row (inc x))    ; right
+                      (rseq (subvec col 0 y)) ; up
+                      (subvec col (inc y))]   ; down
+                dir-sizes (map count dirs)
+                height    (row x)
+                visible-distances (map #(viewing-distance height %) dirs)
+                visible-trees     (map min visible-distances dir-sizes)]]
+      {:is-visible?  (some pos? (map - visible-distances dir-sizes))
+       :scenic-score (reduce * visible-trees)})))
 
 (defn solve
   ([] (solve 8))

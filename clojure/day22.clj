@@ -63,10 +63,9 @@
 (defn solve
   ([] (solve 22))
   ([input]
-   (let [input' (aoc/read-input input)
-         field  (drop-last 2 input')
+   (let [[field [moves]] (aoc/read-input-paragraphs input)
          start  [(str/index-of (first field) \.) 0]
-         moves  (-> (last input')
+         moves  (-> moves
                     (str/replace #"(L|R)" " $1 ")
                     (str/split #" "))
          grid   (aoc/vec2d->grid field #{\. \#})

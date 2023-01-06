@@ -13,7 +13,7 @@
 (defn add-floor [rocks]
   (let [floor-y (+ 2 (reduce max (map second rocks)))
         floor (for [x (range (- start-x floor-y) (+ start-x floor-y 1))] [x floor-y])]
-    (reduce conj rocks floor)))
+    (into rocks floor)))
 
 (defn drop-grain [settled]
   (loop [[x y] [start-x 0]]

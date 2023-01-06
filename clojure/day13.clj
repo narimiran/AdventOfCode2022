@@ -29,7 +29,8 @@
 (defn part-2 [packets]
   (let [two [[2]]
         six [[6]]]
-    (->> (conj packets [two six])
+    (->> [two six]
+         (into packets)
          (reduce concat)
          (#(* (divider-index % two)
               (divider-index % six))))))

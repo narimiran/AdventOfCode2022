@@ -1,6 +1,6 @@
 (ns day18
   (:require aoc
-            [clojure.set :as sets]))
+            [clojure.set :as set]))
 
 
 (defn find-extremes [cubes]
@@ -12,14 +12,14 @@
   (let [[lower upper] (find-extremes cubes)]
     (loop [seen  cubes
            queue [(repeat 3 lower)]]
-      (if (empty? queue) (sets/difference seen cubes)
+      (if (empty? queue) (set/difference seen cubes)
           (let [valid
                 (for [nb (aoc/neighbours-3d (peek queue))
                       :when (and (not (seen nb))
                                  (every? #(<= lower % upper) nb))]
                   nb)]
-            (recur (apply conj seen valid)
-                   (apply conj (pop queue) valid)))))))
+            (recur (into seen valid)
+                   (into (pop queue) valid)))))))
 
 (defn parse-input [filename]
   (->> filename
@@ -31,7 +31,7 @@
   ([] (solve 18))
   ([input]
    (let [cubes (parse-input input)
-         neighbours (apply concat (map aoc/neighbours-3d cubes))
+         neighbours (mapcat aoc/neighbours-3d cubes)
          outside (space-around cubes)]
      [(count (remove cubes neighbours))
       (count (filter outside neighbours))])))

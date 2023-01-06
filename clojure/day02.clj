@@ -15,11 +15,11 @@
     \Y :draw
     \Z :win))
 
-(def winning {:rock     :scissors
-              :paper    :rock
-              :scissors :paper})
+(def wins {:rock     :scissors
+           :paper    :rock
+           :scissors :paper})
 
-(def losing (set/map-invert winning))
+(def loses (set/map-invert wins))
 
 (def points {:rock 1 :paper 2 :scissors 3
              :lose 0 :draw 3 :win 6})
@@ -27,9 +27,9 @@
 (defn p1-rules [line]
   (let [[op pl] (map parse-shape line)
         outcome (condp = op
-                  (winning pl) :win
-                  (losing pl)  :lose
-                               :draw)]
+                  pl :draw
+                  (pl wins) :win
+                  :lose)]
     (+ (points pl)
        (points outcome))))
 
@@ -38,8 +38,8 @@
         outcome (parse-outcome outcome')
         pl      (case outcome
                   :draw op
-                  :lose (winning op)
-                  :win  (losing op))]
+                  :lose (op wins)
+                  :win  (op loses))]
     (+ (points pl)
        (points outcome))))
 

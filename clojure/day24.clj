@@ -3,8 +3,8 @@
             [clojure.set :as set]))
 
 
-(defn neighbours-5 [[x y]]
-  (for [[dx dy] [[-1 0] [0 0] [1 0] [0 -1] [0 1]]]
+(defn neighbours [[x y]]
+  (for [[dx dy] [[-1 0] [1 0] [0 -1] [0 1]]]
        [(+ x dx) (+ y dy)]))
 
 (defn traverse [[blizzards walls w h] start goal t]
@@ -12,7 +12,7 @@
          queue #{start}]
     (if (queue goal) t
         (let [t          (inc t)
-              candidates (set (mapcat neighbours-5 queue))
+              candidates (into queue (mapcat neighbours queue))
               obstacles  (into walls
                                (for [[[x y] [dx dy]] blizzards]
                                  [(mod (+ x (* dx t)) w)

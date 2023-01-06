@@ -28,18 +28,19 @@
                            (+ (get conns ba 999)
                               (get conns ac 999)))))))
    connections
-   (for [a valves, b valves, c valves] [a b c])))
+   (for [a valves , b valves , c valves] [a b c])))
 
 
 
-(defn traverse [time current closed-valves conns visited]
+(defn traverse [current closed-valves conns visited time]
   (let [res [visited]]
     (if (< time 2) res
         (apply concat res
               (for [valve closed-valves
                     :let [t (- time (conns (str current valve)) 1)]
                     :when (> t 1)]
-                (traverse t valve (disj closed-valves valve) conns (assoc visited valve t)))))))
+                (traverse valve (disj closed-valves valve) conns (assoc visited valve t) t))))))
+
 
 (defn score [flows attempt]
   (reduce-kv
@@ -67,13 +68,13 @@
 
 
 
-(defn part-1 [valves flows conns]
-  (->> (traverse 30 "AA" valves conns {})
+(defn part-1 [release-pressure flows]
+  (->> (release-pressure 30)
        (map (partial score flows))
        (reduce max)))
 
-(defn part-2 [valves flows conns]
-  (->> (traverse 26 "AA" valves conns {})
+(defn part-2 [release-pressure flows]
+  (->> (release-pressure 26)
        (best-score-per-valve-set flows)
        tandem-scores
        (reduce max)))
@@ -89,9 +90,10 @@
                     (filter #(pos? (val %)))
                     (into {}))
          valves (set (keys flows))
-         conns  (floyd-warshall (keys all-flows) direct-conns)]
-     [(part-1 valves flows conns)
-      (part-2 valves flows conns)])))
+         conns  (floyd-warshall (keys all-flows) direct-conns)
+         release-pressure  (partial traverse "AA" valves conns {})]
+     [(part-1 release-pressure flows)
+      (part-2 release-pressure flows)])))
 
 
 (solve)
