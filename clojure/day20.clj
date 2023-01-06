@@ -21,9 +21,13 @@
     (reset! (:right left) right)
     (reset! (:left right) left)))
 
-(defn rotate [link steps]
+(defn rotate-left [link steps]
   (if (zero? steps) link
       (recur @(:right link) (dec steps))))
+
+(defn rotate-right [link steps]
+  (if (zero? steps) link
+      (recur @(:left link) (dec steps))))
 
 (defn insert [link left]
   (let [right @(:right left)]
@@ -38,7 +42,9 @@
         val   (:val link)
         steps (mod val (dec n))]
     (if (zero? steps) links
-        (let [left (rotate link steps)]
+        (let [left (if (< steps (/ n 2))
+                     (rotate-left  link steps)
+                     (rotate-right link (- n steps)))]
           (unlink link)
           (insert link left)
           links))))
@@ -53,7 +59,7 @@
                      (#(nth % rounds)))
         zero    (find-zero links')
         nth-val (fn [x] (->> (mod x n)
-                             (rotate zero)
+                             (rotate-left zero)
                              :val))]
     (->> [1000 2000 3000]
          (map nth-val)
