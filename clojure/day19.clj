@@ -1,5 +1,6 @@
 (ns day19
-  (:require aoc))
+  (:require aoc
+            [clojure.core.reducers :as r]))
 
 
 (defn geodes [costs t]
@@ -68,23 +69,23 @@
 
 
 (defn part-1 [blueprints]
-  (reduce
-   (fn [acc [bp & costs]]
-     (+ acc (* bp (geodes costs 24))))
-   0
-   blueprints))
+  (let [quality-level (fn [[bp & costs]]
+                        (* bp (geodes costs 24)))]
+    (->> blueprints
+         (r/map quality-level)
+         (r/fold 1 + +))))
 
 (defn part-2 [blueprints]
-  (reduce
-   (fn [acc [_ & costs]]
-     (* acc (geodes costs 32)))
-   1
-   (take 3 blueprints)))
+  (->> blueprints
+       (take 3)
+       (mapv rest)
+       (r/map #(geodes % 32))
+       (r/fold 1 * *)))
 
 (defn solve
   ([] (solve 19))
   ([input]
-   (let [blueprints (map aoc/integers (aoc/read-input input))]
+   (let [blueprints (mapv aoc/integers (aoc/read-input input))]
      [(part-1 blueprints)
       (part-2 blueprints)])))
 
