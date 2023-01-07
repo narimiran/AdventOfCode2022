@@ -1,5 +1,4 @@
 from aoc import *
-from collections import defaultdict
 
 
 def check_direction(dir):
@@ -9,7 +8,7 @@ def check_direction(dir):
 
 def play_round(elves, round):
     new_elves = set()
-    proposed = defaultdict(set)
+    proposed = set()
     directions = [-1j, 1j, -1, 1]
     for elf in elves:
         if not any(nb in elves for nb in complex_neighbours(elf, 8)):
@@ -18,18 +17,18 @@ def play_round(elves, round):
             for attempt in range(4):
                 direction = directions[(round + attempt) % 4]
                 if not any(elf+nb in elves for nb in check_direction(direction)):
-                    proposed[elf+direction].add(elf)
+                    new_pos = elf + direction
+                    if new_pos in proposed:
+                        proposed.remove(new_pos)
+                        proposed |= {elf, new_pos+direction}
+                    else:
+                        proposed.add(new_pos)
                     break
             else:
                 new_elves.add(elf)
     if not proposed:
         return False
-    for pos, old_pos in proposed.items():
-        if len(old_pos) == 1:
-            new_elves.add(pos)
-        else:
-            new_elves |= old_pos
-    return new_elves
+    return new_elves | proposed
 
 
 def calc_score(elves):
