@@ -2,46 +2,37 @@
   (:require aoc))
 
 
-(def n [0 -1])
-(def s [0 1])
-(def w [-1 0])
-(def e [1 0])
+(defn pick-direction [nbs n]
+  (case n
+    0 (take 3 nbs)
+    1 (take-last 3 nbs)
+    2 (let [[[nw] [w _ sw]] (partition 3 nbs)]
+        [nw w sw])
+    3 (let [[_ [ne] [e] [_ se]] (partition 2 nbs)]
+        [ne e se])))
 
-(defn pt+ [[ax ay] [bx by]]
-  [(+ ax bx) (+ ay by)])
-
-(def adjacent
-  [[n [(pt+ n w) n (pt+ n e)]]
-   [s [(pt+ s w) s (pt+ s e)]]
-   [w [(pt+ n w) w (pt+ s w)]]
-   [e [(pt+ n e) e (pt+ s e)]]])
-
-
-(defn propose [elves elf round proposals]
-  (if (not-any? elves (aoc/neighbours elf 8))
-    (assoc proposals elf [elf])
-    (let [prop (or (first (for [i (range 4)
-                                :let [[dir adjs] (adjacent (mod (+ round i) 4))
-                                      nbs (map #(pt+ elf %) adjs)]
-                                :when (not-any? elves nbs)]
-                            (pt+ elf dir)))
-                   elf)]
-      (update proposals prop #(conj % elf)))))
-
-(defn make-proposals [elves round]
-  (reduce
-   (fn [proposals elf]
-     (propose elves elf round proposals))
-   {}
-   elves))
+(defn propose [elves round elf]
+  (let [nbs (aoc/neighbours elf 8)]
+    (if (not-any? elves nbs) [elf elf]
+        (let [prop (or (first (for [i (range 4)
+                                    :let [n   (mod (+ round i) 4)
+                                          dir (pick-direction nbs n)]
+                                    :when (not-any? elves dir)]
+                                (second dir)))
+                       elf)]
+          [prop elf]))))
 
 (defn play-round [elves round]
-  (reduce-kv (fn [new-elves prop old-pos]
-     (if (= (count old-pos) 1)
-       (conj new-elves prop)
-       (apply conj new-elves old-pos)))
-   #{}
-   (make-proposals elves round)))
+  (->> elves
+       (pmap (partial propose elves round))
+       (reduce (fn [proposals [k v]]
+                 (update proposals k #(conj % v)))
+               {})
+       (reduce-kv (fn [new-elves prop old-pos]
+                    (if (= (count old-pos) 1)
+                      (conj new-elves prop)
+                      (into new-elves old-pos)))
+                  #{})))
 
 (defn calc-area [elves]
   (let [[xs ys] (map sort (apply mapv vector elves))]
@@ -54,12 +45,14 @@
       (- (count elves))))
 
 (defn part-2 [elves]
-  (loop [round 0
-         elves elves]
-    (let [new-elves (play-round elves round)]
-      (if (= new-elves elves)
-        (inc round)
-        (recur (inc round) new-elves)))))
+  (reduce
+   (fn [elves round]
+     (let [new-elves (play-round elves round)]
+       (if (= new-elves elves)
+         (reduced (inc round))
+         new-elves)))
+   elves
+   (iterate inc 0)))
 
 
 (defn parse-input [input]

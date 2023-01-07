@@ -68,8 +68,8 @@
   [(+ ax bx) (+ ay by)])
 
 (defn neighbours [[x y] amount]
-  (for [dx [-1 0 1]
-        dy [-1 0 1]
+  (for [dy [-1 0 1]
+        dx [-1 0 1]
         :when
         (case amount
           4 (odd? (- dx dy))
