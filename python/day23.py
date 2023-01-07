@@ -1,45 +1,48 @@
 from aoc import *
 
 
-def check_direction(dir):
-    for delta in (-1, 0, 1):
-        yield dir + delta * (1j if dir in {-1, 1} else 1)
+S = 256
+N = -S
 
+
+directions = [[N-1,  N, N+1], # N
+              [S-1,  S, S+1], # S
+              [N-1, -1, S-1], # W
+              [N+1, +1, S+1]] # E
+
+adjacent = {pt for dir in directions for pt in dir}
 
 def play_round(elves, round):
-    new_elves = set()
-    proposed = set()
-    directions = [-1j, 1j, -1, 1]
+    proposed = dict()
     for elf in elves:
-        if not any(nb in elves for nb in complex_neighbours(elf, 8)):
-            new_elves.add(elf)
-        else:
+        if any(elf+pt in elves for pt in adjacent):
             for attempt in range(4):
-                direction = directions[(round + attempt) % 4]
-                if not any(elf+nb in elves for nb in check_direction(direction)):
-                    new_pos = elf + direction
-                    if new_pos in proposed:
-                        proposed.remove(new_pos)
-                        proposed |= {elf, new_pos+direction}
+                n = (round + attempt) % 4
+                if not any(elf+pt in elves for pt in directions[n]):
+                    prop = elf + directions[n][1]
+                    if prop in proposed:
+                        del proposed[prop]
                     else:
-                        proposed.add(new_pos)
+                        proposed[prop] = elf
                     break
-            else:
-                new_elves.add(elf)
     if not proposed:
         return False
-    return new_elves | proposed
+    for new_pos, old_pos in proposed.items():
+        elves.remove(old_pos)
+        elves.add(new_pos)
+    return elves
 
 
 def calc_score(elves):
-    xs = {int(elf.real) for elf in elves}
-    ys = {int(elf.imag) for elf in elves}
+    xs = {(elf+10) % S for elf in elves} # avoid negatives
+    ys = {elf // S for elf in elves}
     x_len = max(xs) - min(xs) + 1
     y_len = max(ys) - min(ys) + 1
     return x_len * y_len - len(elves)
 
 
 def play_game(elves, rounds):
+    elves = elves.copy()
     for r in range(rounds):
         elves = play_round(elves, r)
         if not elves:
@@ -48,9 +51,10 @@ def play_game(elves, rounds):
 
 
 def parse_input(data):
-    return {x + y*1j for y, line in enumerate(data)
-                     for x, c in enumerate(line)
-                     if c == '#'}
+    return {x + S*y
+            for y, line in enumerate(data)
+            for x, c in enumerate(line)
+            if c == '#'}
 
 
 def solve(filename=23):
