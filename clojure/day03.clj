@@ -1,11 +1,11 @@
 (ns day03
   (:require aoc
-            [clojure.set :as set]
-            [clojure.string :as str]))
+            [clojure.data.int-map :as i]))
 
 
-(def letters " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-(defn item-priority [l] (str/index-of letters l))
+(defn item-priority [l]
+  (let [i (int l)]
+    (if (> i 96) (- i 96) (- i 38))))
 
 (defn split-rucksack [rucksack]
   (let [mid (/ (count rucksack) 2)]
@@ -13,28 +13,28 @@
 
 (defn find-common-item [group]
   (->> group
-       (map set)
-       (reduce set/intersection)
+       (map i/dense-int-set)
+       (reduce i/intersection)
        first))
 
 (defn priority-sum [rucksacks split-func]
   (->> rucksacks
        split-func
-       (transduce
-        (comp
-         (map find-common-item)
-         (map item-priority))
-        +)))
+       (map find-common-item)
+       (apply +)))
 
-(def p1 #(map split-rucksack %))
-(def p2 #(partition 3 %))
+(def f1 #(map split-rucksack %))
+(def f2 #(partition 3 %))
 
 (defn solve
   ([] (solve 3))
   ([input]
-   (let [rucksacks (aoc/read-input input)]
-     [(priority-sum rucksacks p1)
-      (priority-sum rucksacks p2)])))
+   (let [rucksacks (->> input
+                        aoc/read-input
+                        (map #(map item-priority %)))
+         p1 (future (priority-sum rucksacks f1))
+         p2 (future (priority-sum rucksacks f2))]
+     [@p1 @p2])))
 
 
 (solve)
