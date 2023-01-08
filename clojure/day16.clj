@@ -36,28 +36,25 @@
   (let [res [visited]]
     (if (< time 2) res
         (apply concat res
-              (for [valve closed-valves
-                    :let [t (- time (conns (str current valve)) 1)]
-                    :when (> t 1)]
-                (traverse valve (disj closed-valves valve) conns (assoc visited valve t) t))))))
+               (for [valve closed-valves
+                     :let [t (- time (conns (str current valve)) 1)]
+                     :when (> t 1)]
+                 (traverse valve (disj closed-valves valve) conns (assoc visited valve t) t))))))
 
 
 (defn score [flows attempt]
-  (reduce-kv
-   (fn [acc valve time]
-     (+ acc (* (flows valve) time)))
-   0
-   attempt))
+  (->> attempt
+       (map (fn [[valve time]]
+              (* (flows valve) time)))
+       (reduce +)))
 
 (defn best-score-per-valve-set [flows attempts]
-  (reduce
-   (fn [top-scores attempt]
-     (let [k   (set (keys attempt))
-           v   (score flows attempt)
-           old (get top-scores k 0)]
-       (assoc top-scores k (max v old))))
-   {}
-   attempts))
+  (->> attempts
+       (map (fn [attempt]
+              [(set (keys attempt)) (score flows attempt)]))
+       (reduce (fn [top-scores [k v]]
+                 (update top-scores k (fnil #(max v %) 0)))
+               {})))
 
 (defn tandem-scores [top-scores]
   (for [[i [h_vis h_score]] (map-indexed vector top-scores)
@@ -68,32 +65,38 @@
 
 
 
-(defn part-1 [release-pressure flows]
-  (->> (release-pressure 30)
+(defn part-1 [[traverse_ flows]]
+  (->> (traverse_ 30)
        (map (partial score flows))
        (reduce max)))
 
-(defn part-2 [release-pressure flows]
-  (->> (release-pressure 26)
+(defn part-2 [[traverse_ flows]]
+  (->> (traverse_ 26)
        (best-score-per-valve-set flows)
+       (sort-by second)
+       (take-last 256) ; narrow down the search space
        tandem-scores
        (reduce max)))
+
+(defn parse-input [input]
+  (let [[all-flows direct-conns]
+        (->> (aoc/read-input input)
+             (mapv parse-line)
+             create-connections)
+        conns  (floyd-warshall (keys all-flows) direct-conns)
+        flows (->> all-flows
+                   (filter #(pos? (val %)))
+                   (into {}))
+        valves (set (keys flows))
+        traverse_  (partial traverse "AA" valves conns {})]
+    [traverse_ flows]))
 
 (defn solve
   ([] (solve 16))
   ([input]
-   (let [[all-flows direct-conns]
-         (->> (aoc/read-input input)
-              (map parse-line)
-              create-connections)
-         flows (->> all-flows
-                    (filter #(pos? (val %)))
-                    (into {}))
-         valves (set (keys flows))
-         conns  (floyd-warshall (keys all-flows) direct-conns)
-         release-pressure  (partial traverse "AA" valves conns {})]
-     [(part-1 release-pressure flows)
-      (part-2 release-pressure flows)])))
+   (let [data (parse-input input)]
+     [(part-1 data)
+      (part-2 data)])))
 
 
 (solve)
