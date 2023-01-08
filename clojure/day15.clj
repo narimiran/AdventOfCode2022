@@ -7,40 +7,60 @@
 
 (defn seen-in-row [sensors row]
   (->> sensors
-       (reduce
-        (fn [edges [[sx sy] r]]
-          (let [diff (- r (abs (- row sy)))]
-            (if (pos? diff)
-              (conj edges [(- sx diff) (+ sx diff)])
-              edges)))
-        [])
+       (mapcat (fn [[[sx sy] r]]
+                 (let [diff (- r (abs (- row sy)))]
+                   (when (pos? diff)
+                     [(- sx diff) (+ sx diff)]))))
+       (remove nil?)
        sort
        vec))
 
-(defn find-a-hole [edges]
-  (let [val
-        (reduce
-         (fn [highest [a b]]
-           (if (<= a (inc highest))
-             (max b highest)
-             (reduced (dec a))))
-         0
-         edges)]
-    (when (< val (first (peek edges))) val)))
-
 (defn part-1 [sensors row]
-  (let [seen  (seen-in-row sensors row)
-        [a _] (first seen)
-        [_ b] (peek seen)]
-    (- b a)))
+  (let [seen  (seen-in-row sensors row)]
+    (- (peek seen) (first seen))))
+
+
+
+(defn find-coeffs [[[sx sy] r]]
+  [[(+ (- sy sx) (inc r))
+    (- (- sy sx) (inc r))]
+   [(+ (+ sy sx) (inc r))
+    (- (+ sy sx) (inc r))]])
+
+(defn extract-useful [coeffs a-or-b]
+  (->> coeffs
+       (mapcat a-or-b)
+       frequencies
+       (filter #(> (val %) 1))
+       keys))
+
+(defn found-beacon? [sensors location]
+  (not-any?
+   (fn [[sensor r]]
+     (<= (aoc/manhattan sensor location) r))
+   sensors))
+
+(defn calc-score [[col row]]
+  (+ (* 4000000 col) row))
 
 (defn part-2 [sensors limit]
-  (loop [row limit]
-    (let [edges (seen-in-row sensors row)
-          col   (find-a-hole edges)]
-      (if (some? col)
-        (+ (* 4000000 col) row)
-        (recur (dec row))))))
+  (let [coeffs     (map find-coeffs sensors)
+        pos-coeffs (extract-useful coeffs first)
+        neg-coeffs (extract-useful coeffs second)
+        potential-locations
+        (for [a pos-coeffs
+              b neg-coeffs
+              :when (and (> b a) (zero? (mod (- b a) 2)))
+              :let [x (/ (- b a) 2)
+                    y (/ (+ b a) 2)]
+              :when (and (< 0 x limit) (< 0 y limit))]
+          [x y])]
+    (->> potential-locations
+         (filter (partial found-beacon? sensors))
+         first
+         calc-score)))
+
+
 
 (defn solve
   ([] (solve 15))
