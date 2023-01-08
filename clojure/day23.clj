@@ -1,5 +1,6 @@
 (ns day23
-  (:require aoc))
+  (:require aoc
+            [clojure.data.int-map :as i]))
 
 
 (def S 256)
@@ -32,13 +33,9 @@
             (assoc proposals prop elf))))))
 
 (defn move [elves proposals]
-  (reduce
-   (fn [elves [prop old]]
-     (-> elves
-         (disj old)
-         (conj prop)))
-   elves
-   proposals))
+  (as-> elves $
+    (reduce disj $ (vals proposals))
+    (reduce conj $ (keys proposals))))
 
 (defn play-round [elves round]
   (->> elves
@@ -70,11 +67,12 @@
 
 
 (defn parse-input [input]
-  (set (for [[y line] (map-indexed vector input)
-             [x char] (map-indexed vector line)
-             :when (= char \#)]
-         (+ 16 x  ; avoid negatives
-            (* S (+ 16 y))))))
+  (i/dense-int-set
+   (for [[y line] (map-indexed vector input)
+         [x char] (map-indexed vector line)
+         :when (= char \#)]
+     (+ 16 x  ; avoid negatives
+        (* S (+ 16 y))))))
 
 (defn solve
   ([] (solve 23))
