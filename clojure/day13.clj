@@ -15,11 +15,11 @@
 
 (defn part-1 [packets]
   (->> packets
-       (reduce (fn [[acc idx] [l r]]
-                 [(if (neg? (compair l r)) (+ acc idx) acc)
-                  (inc idx)])
-               [0 1])
-       first))
+       (map-indexed (fn [idx [l r]]
+                      (if (neg? (compair l r))
+                        (inc idx)
+                        0)))
+       (reduce +)))
 
 (defn divider-index [packets target]
   (->> packets

@@ -3,13 +3,15 @@
 
 
 (defn process [buffer length]
-  (loop [pos    length
-         buffer buffer]
-    (if (->> buffer
-             (take length)
-             (apply distinct?))
-      pos
-      (recur (inc pos) (rest buffer)))))
+  (reduce
+   (fn [buffer pos]
+     (if (->> buffer
+              (take length)
+              (apply distinct?))
+       (reduced pos)
+       (rest buffer)))
+   buffer
+   (iterate inc length)))
 
 (defn solve
   ([] (solve 6))

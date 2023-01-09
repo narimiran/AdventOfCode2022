@@ -32,28 +32,30 @@
 
 
 
-(defn walk [move pos d grid wrap-fn]
-  (loop [p pos
-         d d
-         m (parse-long move)]
-    (if (zero? m) [p d]
-        (let [p' (aoc/pt+ p d)
-              [p'' d'] (if (not (contains? grid p'))
-                         (wrap-fn p' d)
-                         [p' d])]
-          (if (= \. (get grid p'' \#))
-            (recur p'' d' (dec m))
-            [p d])))))
+(defn walk [grid wrap-fn move pos d]
+  (reduce
+   (fn [[p d] _]
+     (let [p'       (aoc/pt+ p d)
+           [p'' d'] (if (not (contains? grid p'))
+                      (wrap-fn p' d)
+                      [p' d])]
+       (if (= \. (get grid p'' \#))
+         [p'' d']
+         (reduced [p d]))))
+   [pos d]
+   (range (parse-long move))))
+
 
 (defn traverse [start moves grid wrap-fn]
-  (reduce
-   (fn [[pos [dx dy :as d]] move]
-     (case move
-       "L" [pos [dy (- dx)]]
-       "R" [pos [(- dy) dx]]
-       (walk move pos d grid wrap-fn)))
-   [start [1 0]]
-   moves))
+  (let [walk_ (partial walk grid wrap-fn)]
+    (reduce
+     (fn [[pos [dx dy :as d]] move]
+       (case move
+         "L" [pos [dy (- dx)]]
+         "R" [pos [(- dy) dx]]
+         (walk_ move pos d)))
+     [start [1 0]]
+     moves)))
 
 (defn password [[[x y] d]]
   (+ (* 4 (inc x))
@@ -69,9 +71,9 @@
                     (str/replace #"(L|R)" " $1 ")
                     (str/split #" "))
          grid   (aoc/vec2d->grid field #{\. \#})
-         move   (partial traverse start moves grid)]
-     [(password (move wrap-1))
-      (password (move wrap-2))])))
+         move_  (partial traverse start moves grid)]
+     [(-> (move_ wrap-1) password)
+      (-> (move_ wrap-2) password)])))
 
 
 (solve)

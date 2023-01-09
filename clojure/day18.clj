@@ -13,11 +13,11 @@
     (loop [seen  cubes
            queue [(repeat 3 lower)]]
       (if (empty? queue) (set/difference seen cubes)
-          (let [valid
-                (for [nb (aoc/neighbours-3d (peek queue))
-                      :when (and (not (seen nb))
-                                 (every? #(<= lower % upper) nb))]
-                  nb)]
+          (let [valid (->> (peek queue)
+                           aoc/neighbours-3d
+                           (filter (fn [nb]
+                                     (and (not (seen nb))
+                                          (every? #(<= lower % upper) nb)))))]
             (recur (into seen valid)
                    (into (pop queue) valid)))))))
 
@@ -30,9 +30,9 @@
 (defn solve
   ([] (solve 18))
   ([input]
-   (let [cubes (parse-input input)
+   (let [cubes      (parse-input input)
          neighbours (mapcat aoc/neighbours-3d cubes)
-         outside (space-around cubes)]
+         outside    (space-around cubes)]
      [(count (remove cubes neighbours))
       (count (filter outside neighbours))])))
 
