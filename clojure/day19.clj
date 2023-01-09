@@ -1,31 +1,40 @@
 (ns day19
-  (:require aoc
-            [clojure.core.reducers :as r]))
+  (:require aoc))
 
 
-(defn geodes [costs t]
-  (let [[ore-ore clay-ore obs-ore obs-clay geode-ore geode-obs] costs
+(defrecord Blueprint [prices max-resources])
+
+
+(defn line->blueprint [line]
+  (let [[_ ore-ore clay-ore obs-ore obs-clay geode-ore geode-obs] line
         prices {:ore   {:ore ore-ore}
                 :clay  {:ore clay-ore}
                 :obs   {:ore obs-ore   , :clay obs-clay}
                 :geode {:ore geode-ore , :obs geode-obs}}
-        resources {:ore 0 , :clay 0 , :obs 0 , :geode 0}
-        bots  {:ore 1 , :clay 0 , :obs 0 , :geode 0}
-        types [:ore :clay :obs :geode]
-        times {:ore 0 , :clay 4 , :obs 2 , :geode 0}
         max-resources {:ore (max ore-ore clay-ore obs-ore geode-ore)
-                       :clay obs-clay , :obs geode-obs , :geode 9999}
-        state {:t t , :bots bots , :resources resources , :skipped #{}}
+                       :clay obs-clay , :obs geode-obs , :geode 9999}]
+    (->Blueprint prices max-resources)))
+
+
+(defn best-case [resource bot time]
+  (+ resource
+     (* bot time)
+     (/ (* time (inc time)) 2)))
+
+(defn build-bot  [resources price]
+  (reduce-kv (fn [rscs k v] (update rscs k #(- % v)))
+             resources
+             price))
+
+(defn geodes [t bp]
+  (let [types [:ore :clay :obs :geode]
+        times {:ore 0 , :clay 4 , :obs 2 , :geode 0}
+        state {:t t
+               :bots      {:ore 1 , :clay 0 , :obs 0 , :geode 0}
+               :resources {:ore 0 , :clay 0 , :obs 0 , :geode 0}
+               :skipped   #{}}
+        {:keys [prices max-resources]} bp
         ,
-        best-case (fn [resource bot time]
-                    (+ resource
-                       (* bot time)
-                       (/ (* time (inc time)) 2)))
-        build-bot (fn [resources price]
-                    (reduce-kv (fn [rscs k v]
-                                 (update rscs k #(- % v)))
-                               resources
-                               price))
         collect (fn [resources bots t]
                   (into {} (for [res types]
                              [res (min (* (max-resources res) t)
@@ -69,25 +78,30 @@
 
 
 (defn part-1 [blueprints]
-  (let [quality-level (fn [[bp & costs]]
-                        (* bp (geodes costs 24)))]
-    (->> blueprints
-         (r/map quality-level)
-         (r/fold 1 + +))))
+  (->> blueprints
+       (pmap (partial geodes 24))
+       (mapv * (iterate inc 1))
+       (reduce +)))
 
 (defn part-2 [blueprints]
   (->> blueprints
        (take 3)
-       (mapv rest)
-       (r/map #(geodes % 32))
-       (r/fold 1 * *)))
+       (pmap (partial geodes 32))
+       (reduce *)))
+
+(defn parse-input [input]
+  (->> input
+       aoc/read-input
+       (mapv aoc/integers)
+       (mapv line->blueprint)))
 
 (defn solve
   ([] (solve 19))
   ([input]
-   (let [blueprints (mapv aoc/integers (aoc/read-input input))]
-     [(part-1 blueprints)
-      (part-2 blueprints)])))
+   (let [blueprints (parse-input input)
+         p1 (future (part-1 blueprints))
+         p2 (future (part-2 blueprints))]
+     [@p1 @p2])))
 
 
 (solve)
