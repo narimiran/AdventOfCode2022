@@ -16,7 +16,7 @@
        vec))
 
 (defn part-1 [sensors row]
-  (let [seen  (seen-in-row sensors row)]
+  (let [seen (seen-in-row sensors row)]
     (- (peek seen) (first seen))))
 
 

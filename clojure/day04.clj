@@ -18,8 +18,8 @@
   ([] (solve 4))
   ([input]
    (let [assignments-pairs (parse-input input)]
-     [(count (filter fully-contain? assignments-pairs))
-      (count (filter overlap?       assignments-pairs))])))
+     [(->> assignments-pairs (filter fully-contain?) count)
+      (->> assignments-pairs (filter overlap?)       count)])))
 
 
 (solve)

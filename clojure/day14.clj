@@ -5,6 +5,10 @@
 (def start-x 500)
 
 
+(defn down  [[x y]] [x       (inc y)])
+(defn left  [[x y]] [(dec x) (inc y)])
+(defn right [[x y]] [(inc x) (inc y)])
+
 (defn path->rock [[ax ay] [bx by]]
   (for [x (range (min ax bx) (inc (max ax bx)))
         y (range (min ay by) (inc (max ay by)))]
@@ -16,23 +20,23 @@
     (into rocks floor)))
 
 (defn drop-grain [settled]
-  (loop [[x y] [start-x 0]]
-    (let [down  [x       (inc y)]
-          left  [(dec x) (inc y)]
-          right [(inc x) (inc y)]]
+  (loop [pt [start-x 0]]
+    (let [d (down pt)
+          l (left pt)
+          r (right pt)]
       (cond
-        (not (settled down))  (recur down)
-        (not (settled left))  (recur left)
-        (not (settled right)) (recur right)
-        :else [x y]))))
+        (not (settled d)) (recur d)
+        (not (settled l)) (recur l)
+        (not (settled r)) (recur r)
+        :else pt))))
 
-(defn fill-to-full [settled [x y]]
-  (if (settled [x y]) settled
+(defn fill-to-full [settled pt]
+  (if (settled pt) settled
       (-> settled
-          (fill-to-full [x       (inc y)])
-          (fill-to-full [(dec x) (inc y)])
-          (fill-to-full [(inc x) (inc y)])
-          (conj [x y]))))
+          (fill-to-full (down pt))
+          (fill-to-full (left pt))
+          (fill-to-full (right pt))
+          (conj pt))))
 
 (defn part-1 [rocks]
   (let [floor (reduce max (map second rocks))]

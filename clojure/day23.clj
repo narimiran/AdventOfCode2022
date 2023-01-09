@@ -40,8 +40,7 @@
 (defn play-round [elves round]
   (->> elves
        (reduce (partial propose elves round) {})
-       (#(when (seq %)
-           (move elves %)))))
+       (#(when (seq %) (move elves %)))))
 
 (defn calc-area [elves]
   (let [xs (sort (map #(mod  % S) elves))
@@ -67,17 +66,19 @@
 
 
 (defn parse-input [input]
-  (i/dense-int-set
-   (for [[y line] (map-indexed vector input)
-         [x char] (map-indexed vector line)
-         :when (= char \#)]
-     (+ 16 x  ; avoid negatives
-        (* S (+ 16 y))))))
+  (->> input
+       aoc/read-input
+       (#(for [[y line] (map-indexed vector %)
+               [x char] (map-indexed vector line)
+               :when (= char \#)]
+           (+ (/ S 2) x
+              (* S (+ (/ S 2) y)))))
+       i/dense-int-set))
 
 (defn solve
   ([] (solve 23))
   ([input]
-   (let [elves (parse-input (aoc/read-input input))]
+   (let [elves (parse-input input)]
      [(part-1 elves)
       (part-2 elves)])))
 

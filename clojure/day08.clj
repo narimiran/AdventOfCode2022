@@ -2,11 +2,15 @@
   (:require aoc))
 
 
-(defn viewing-distance [height dir]
-  (->> dir
-       (take-while #(> height %))
+(defn visible-from-outside? [lower-than-current? direction]
+  (every? lower-than-current? direction))
+
+(defn viewing-distance [lower-than-current? direction]
+  (->> direction
+       (take-while lower-than-current?)
        count
-       inc))
+       inc
+       (min (count direction))))
 
 (defn go-through-forrest [height-map]
   (let [hor  height-map
@@ -17,12 +21,12 @@
                       (subvec row (inc x))    ; right
                       (rseq (subvec col 0 y)) ; up
                       (subvec col (inc y))]   ; down
-                dir-sizes (map count dirs)
-                height    (row x)
-                visible-distances (map #(viewing-distance height %) dirs)
-                visible-trees     (map min visible-distances dir-sizes)]]
-      {:is-visible?  (some pos? (map - visible-distances dir-sizes))
-       :scenic-score (reduce * visible-trees)})))
+                is-lower? (partial > (row x))
+                f (fn [agg func] (agg #(func is-lower? %) dirs))
+                visible-directions  (f filter visible-from-outside?)
+                visible-trees-count (f map viewing-distance)]]
+      {:is-visible?  (not-empty visible-directions)
+       :scenic-score (reduce * visible-trees-count)})))
 
 (defn solve
   ([] (solve 8))

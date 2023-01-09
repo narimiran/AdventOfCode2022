@@ -70,9 +70,10 @@
   ([input]
    (let [nums   (aoc/read-input input :int)
          links1 (initialize nums)
-         links2 (initialize (map #(* 811589153 %) nums))]
-     [(mix links1 1)
-      (mix links2 10)])))
+         links2 (initialize (map #(* 811589153 %) nums))
+         p1     (future (mix links1 1))
+         p2     (future (mix links2 10))]
+     [@p1 @p2])))
 
 
 (solve)
