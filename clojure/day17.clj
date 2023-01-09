@@ -16,9 +16,6 @@
 (defn inbounds? [rock]
   (every? #(<= 0 % 6) (map first rock)))
 
-(defn not-clashes? [rock tower]
-  (not-any? (set rock) tower))
-
 (defn peaks [tower max-y]
   (set (for [[x y] tower
              :when (= y max-y)]
@@ -28,7 +25,7 @@
 (defn play [movements rounds]
   (let [M (count movements)
         R (count rocks)
-        tower (for [x (range 7)] [x 0])]
+        tower (set (for [x (range 7)] [x 0]))]
     (loop [[r m max-y skipped seen tower] [0 0 0 0 {} tower]]
       (if (>= r rounds) (+ max-y skipped)
           (let [init-pos [2 (+ max-y 4)]
@@ -40,16 +37,16 @@
                                   move-left move-right)
                      rock'      (map move-fn rock)
                      moved-rock (if (and (inbounds? rock')
-                                         (not-clashes? rock' tower))
+                                         (not-any? tower rock'))
                                   rock' rock)
                      rock'' (map move-down moved-rock)]
-                 (if (not-clashes? rock'' tower)
+                 (if (not-any? tower rock'')
                    (recur rock'' (inc m))
                    (let [max-y       (reduce max max-y (map second moved-rock))
                          tower       (->> tower
                                           (filter #(> (second %) (- max-y 100)))
                                           (concat moved-rock)
-                                          dedupe)
+                                          set)
                          t-hash      [(peaks tower max-y) (mod r R) (mod m M)]
                          r           (inc r)
                          [r skipped] (if-let [[r1 y1] (seen t-hash)]
