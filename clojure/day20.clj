@@ -21,11 +21,11 @@
     (reset! (:right left) right)
     (reset! (:left right) left)))
 
-(defn rotate-left [link steps]
+(defn rotate-left [link ^long steps]
   (if (zero? steps) link
       (recur @(:right link) (dec steps))))
 
-(defn rotate-right [link steps]
+(defn rotate-right [link ^long steps]
   (if (zero? steps) link
       (recur @(:left link) (dec steps))))
 
@@ -70,7 +70,7 @@
   ([input]
    (let [nums   (aoc/read-input input :int)
          links1 (initialize nums)
-         links2 (initialize (map #(* 811589153 %) nums))
+         links2 (initialize (map (partial * 811589153) nums))
          p1     (future (mix links1 1))
          p2     (future (mix links2 10))]
      [@p1 @p2])))
