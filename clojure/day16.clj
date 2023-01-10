@@ -24,9 +24,9 @@
            ac (str a c)]
        (if-not (distinct? a b c) conns
                (assoc conns bc
-                      (min (get conns bc 999)
-                           (+ (get conns ba 999)
-                              (get conns ac 999)))))))
+                      (min (conns bc 999)
+                           (+ (conns ba 999)
+                              (conns ac 999)))))))
    connections
    (for [a valves , b valves , c valves] [a b c])))
 

@@ -39,7 +39,7 @@
            [p'' d'] (if (not (contains? grid p'))
                       (wrap-fn p' d)
                       [p' d])]
-       (if (= \. (get grid p'' \#))
+       (if (= \. (grid p'' \#))
          [p'' d']
          (reduced [p d]))))
    [pos d]

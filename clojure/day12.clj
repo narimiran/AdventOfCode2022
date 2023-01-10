@@ -16,7 +16,7 @@
                  (or (= part 2) (= curr start)))
           steps
           (let [nbs (filter #(and (not (seen %))
-                                  (>= (get grid % -99)
+                                  (>= (grid % -99)
                                       (dec (grid curr))))
                             (aoc/neighbours curr 4))
                 nexts (map #(vector (inc steps) %) nbs)]
