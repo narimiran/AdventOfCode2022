@@ -9,10 +9,10 @@
 
 (defn parse-operation [text]
   (match (vec text)
-    ["*" "old"] #(* % %)
-    ["+" "old"] #(+ % %)
-    ["*" val]   #(* % (parse-long val))
-    ["+" val]   #(+ % (parse-long val))))
+    ["*" "old"] (partial *)
+    ["+" "old"] (partial +)
+    ["*" val]   (partial * (parse-long val))
+    ["+" val]   (partial + (parse-long val))))
 
 (defn parse-monkey [lines]
   (let [items (aoc/integers (lines 1))
@@ -29,18 +29,23 @@
       :items     items
       :operation op
       :divisor   divisor
-      :test      (partial #(if (zero? (mod % divisor)) if-true if-false))})))
+      :test      (partial #(if (zero? ^long (mod % divisor)) if-true if-false))})))
+
+(defn update-monkeys [m k1 k2 f]
+  ;; Much faster than the `update-in` built-in.
+  (let [m2 (m k1)]
+    (assoc m k1 (assoc m2 k2 (f (k2 m2))))))
 
 (defn monkey-play [monkeys curr]
   (loop [monkeys monkeys]
-    (if-let [val (peek (:items (monkeys curr)))]
+    (if-let [val (first (:items (monkeys curr)))]
       (let [{:keys [operation reducer test]} (monkeys curr)
             worry (reducer (operation val))
             dest  (test worry)]
         (recur (-> monkeys
-                   (update-in [curr :inspected] inc)
-                   (update-in [curr :items] pop)
-                   (update-in [dest :items] #(conj % worry)))))
+                   (update-monkeys curr :inspected inc)
+                   (update-monkeys curr :items rest)
+                   (update-monkeys dest :items #(conj % worry)))))
       monkeys)))
 
 (defn play-round [monkeys]
@@ -48,7 +53,7 @@
 
 (defn play-game [monkeys rounds divide-worry?]
   (let [lcm     (reduce * (map :divisor monkeys))
-        reducer (if divide-worry? #(quot % 3) #(mod % lcm))]
+        reducer (if divide-worry? #(quot ^long % 3) #(mod ^long % lcm))]
     (->> monkeys
          (mapv #(assoc % :reducer reducer))
          (iterate play-round)
