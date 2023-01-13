@@ -1,23 +1,34 @@
 (ns day24
   (:require aoc
-            [clojure.set :as set]))
+            [clojure.data.int-map :as i]))
 
 
-(defn neighbours [[x y]]
-  (for [[dx dy] [[-1 0] [1 0] [0 -1] [0 1]]]
-       [(+ x dx) (+ y dy)]))
+(def ^:const N 128)
+(def ^:const -N (- N))
+
+
+(defn pt->num ^long [[^long x ^long y]]
+  (+ x (* N y)))
+
+(defn neighbours ^longs [^long pt]
+  (for [^long delta [-1 1 -N N]]
+    (+ pt delta)))
+
+(defn move-blizzards [blizzards w h t]
+  (let [w (long w) , h (long h) , t (long t)]
+    (map (fn [[[^long x ^long y] [^long dx ^long dy]]]
+           (pt->num [(mod (+ x (* dx t)) w)
+                     (mod (+ y (* dy t)) h)]))
+         blizzards)))
 
 (defn traverse [[blizzards walls w h] start goal t]
   (reduce
-   (fn [queue t]
+   (fn [queue ^long t]
      (if (queue goal) (reduced (dec t))
          (let [candidates (into queue (mapcat neighbours queue))
-               obstacles  (into walls
-                                (for [[[x y] [dx dy]] blizzards]
-                                  [(mod (+ x (* dx t)) w)
-                                   (mod (+ y (* dy t)) h)]))]
-           (set/difference candidates obstacles))))
-   #{start}
+               obstacles  (into walls (move-blizzards blizzards w h t))]
+           (i/difference candidates obstacles))))
+   (i/dense-int-set [start])
    (iterate inc t)))
 
 
@@ -25,26 +36,29 @@
   (let [inp (aoc/read-input input :vector)
         res (for [[y line] (map-indexed vector inp)
                   [x char] (map-indexed vector line)
-                  :let [pt [(dec x) (dec y)]]]
-                 (case char
-                   \# [nil         pt]
-                   \> [[pt [1  0]] nil]
-                   \< [[pt [-1 0]] nil]
-                   \v [[pt [0  1]] nil]
-                   \^ [[pt [0 -1]] nil]
-                   [nil nil]))
+                  :let [pt [(dec x) (dec y)]
+                        pt' (pt->num pt)]]
+              (case char
+                \# [nil         pt']
+                \> [[pt [1  0]] nil]
+                \< [[pt [-1 0]] nil]
+                \v [[pt [0  1]] nil]
+                \^ [[pt [0 -1]] nil]
+                [nil nil]))
         blizzards (->> res (map first) (remove empty?))
-        walls' (->> res (map second) (remove empty?))
-        [w h] (last walls')
-        walls (set (into walls' [[0 -2] [(dec w) (inc h)]]))]
+        walls' (->> res (map second) (remove nil?))
+        w (mod  (last walls') N)
+        h (quot (last walls') N)
+        walls (i/dense-int-set (into walls' [(* 2 -N)
+                                             (pt->num [(dec w) (inc h)])]))]
     [blizzards walls w h]))
 
 (defn solve
   ([] (solve 24))
   ([input]
    (let [[_ _ w h :as data] (parse-input input)
-         start [0 -1]
-         goal  [(dec w) h]
+         start -N
+         goal  (pt->num [(dec w) h])
          traverse_ (partial traverse data)
          p1 (->> 0
                  (traverse_ start goal))
@@ -55,3 +69,4 @@
 
 
 (solve)
+
