@@ -1,10 +1,10 @@
 (ns day23
   (:require aoc
-            [clojure.data.int-map :as i]))
+            [clojure.data.int-map :refer [dense-int-set int-map]]))
 
 
-(def S 256)
-(def N (- S))
+(def ^:const S 256)
+(def ^:const N (- S))
 
 (def directions
   [[(dec N)  N (inc N)]   ; N
@@ -16,30 +16,36 @@
   (dedupe (reduce concat directions)))
 
 
-(defn neighbours [elf direction]
-  (map #(+ elf %) direction))
+(defn neighbours [^long elf direction]
+  (map #(+ elf ^long %) direction))
 
-(defn propose [elves round proposals elf]
+(defn propose [elves ^long round proposals elf]
   (let [nbs (neighbours elf adjacent)]
     (if (not-any? elves nbs) proposals
-        (let [prop (or (first (for [i (range 4)
-                                    :let [n       (mod (+ round i) 4)
-                                          dir-nbs (neighbours elf (directions n))]
-                                    :when (not-any? elves dir-nbs)]
-                                (second dir-nbs)))
-                       elf)]
+        (let [prop (reduce
+                    (fn [elf ^long i]
+                      (let [n       (mod (+ round i) 4)
+                            dir-nbs (neighbours elf (directions n))]
+                        (if (not-any? elves dir-nbs)
+                          (reduced (second dir-nbs))
+                          elf)))
+                    elf
+                    (range 4))]
           (if (proposals prop)
-            (dissoc proposals prop)
-            (assoc proposals prop elf))))))
+            (dissoc! proposals prop)
+            (assoc!  proposals prop elf))))))
 
 (defn move [elves proposals]
   (as-> elves $
-    (reduce disj $ (vals proposals))
-    (reduce conj $ (keys proposals))))
+    (transient $)
+    (reduce disj! $ (vals proposals))
+    (reduce conj! $ (keys proposals))
+    (persistent! $)))
 
 (defn play-round [elves round]
   (->> elves
-       (reduce (partial propose elves round) {})
+       (reduce (partial propose elves round) (transient (int-map)))
+       persistent!
        (#(when (seq %) (move elves %)))))
 
 (defn calc-area [elves]
@@ -73,7 +79,7 @@
                :when (= char \#)]
            (+ (/ S 2) x
               (* S (+ (/ S 2) y)))))
-       i/dense-int-set))
+       dense-int-set))
 
 (defn solve
   ([] (solve 23))
