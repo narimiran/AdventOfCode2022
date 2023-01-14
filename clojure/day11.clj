@@ -9,10 +9,10 @@
 
 (defn parse-operation [text]
   (match (vec text)
-    ["*" "old"] (partial *)
-    ["+" "old"] (partial +)
-    ["*" val]   (partial * (parse-long val))
-    ["+" val]   (partial + (parse-long val))))
+    ["*" "old"] #(* % %)
+    ["+" "old"] #(+ % %)
+    ["*" val]   #(* % (parse-long val))
+    ["+" val]   #(+ % (parse-long val))))
 
 (defn parse-monkey [lines]
   (let [items (aoc/integers (lines 1))
