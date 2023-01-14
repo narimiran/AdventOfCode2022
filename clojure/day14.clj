@@ -1,26 +1,18 @@
 (ns day14
-  (:require aoc))
+  (:require aoc
+            [clojure.data.int-map :refer [dense-int-set]]))
 
 
-(def start-x 500)
+(def ^:const start-x 500)
+(def ^:const X 256)
 
 
-(defn down  [[x y]] [x       (inc y)])
-(defn left  [[x y]] [(dec x) (inc y)])
-(defn right [[x y]] [(inc x) (inc y)])
+(defn down  ^long [^long pt] (inc pt))
+(defn left  ^long [^long pt] (- (inc pt) X))
+(defn right ^long [^long pt] (+ (inc pt) X))
 
-(defn path->rock [[ax ay] [bx by]]
-  (for [x (range (min ax bx) (inc (max ax bx)))
-        y (range (min ay by) (inc (max ay by)))]
-    [x y]))
-
-(defn add-floor [rocks]
-  (let [floor-y (+ 2 (reduce max (map second rocks)))
-        floor (for [x (range (- start-x floor-y) (+ start-x floor-y 1))] [x floor-y])]
-    (into rocks floor)))
-
-(defn drop-grain [settled]
-  (loop [pt [start-x 0]]
+(defn drop-grain ^long [settled]
+  (loop [pt (* X start-x)]
     (let [d (down pt)
           l (left pt)
           r (right pt)]
@@ -39,18 +31,29 @@
           (conj pt))))
 
 (defn part-1 [rocks]
-  (let [floor (reduce max (map second rocks))]
+  (let [^long floor (reduce max (map #(mod % X) rocks))]
     (loop [settled rocks]
-      (let [[x y] (drop-grain settled)]
-        (if (= y (dec floor))
+      (let [pt (drop-grain settled)]
+        (if (= (mod pt X) (dec floor))
           (- (count settled) (count rocks))
-          (recur (conj settled [x y])))))))
+          (recur (conj settled pt)))))))
 
 (defn part-2 [rocks]
   (-> rocks
-      (fill-to-full [start-x 0])
+      (fill-to-full (* X start-x))
       count
       (- (count rocks))))
+
+
+(defn path->rock [[ax ay] [bx by]]
+  (for [x (range (min ax bx) (inc (max ax bx)))
+        y (range (min ay by) (inc (max ay by)))]
+    (+ (* X x) y)))
+
+(defn add-floor [rocks]
+  (let [floor-y (+ 2 (reduce max (map #(mod % X) rocks)))
+        floor (for [x (range (- start-x floor-y) (+ start-x floor-y 1))] (+ (* X x) floor-y ))]
+    (into rocks floor)))
 
 (defn parse-input [input]
   (->> input
@@ -59,7 +62,7 @@
        (map #(partition 2 %))      ; points
        (mapcat #(partition 2 1 %)) ; paths
        (mapcat #(apply path->rock %))
-       set
+       dense-int-set
        add-floor))
 
 (defn solve
