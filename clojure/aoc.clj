@@ -46,9 +46,9 @@
   (apply mapv vector matrix))
 
 
-(defn manhattan
+(defn manhattan ^long
   ([p] (manhattan p [0 0]))
-  ([[x1 y1] [x2 y2]]
+  ([[^long x1 ^long y1] [^long x2 ^long y2]]
    (+ (abs (- x1 x2))
       (abs (- y1 y2)))))
 
@@ -64,12 +64,12 @@
         (re-seq (if negative? #"-?\d+" #"\d+") s)))
 
 
-(defn pt+ [[ax ay] [bx by]]
+(defn pt+ ^longs [[^long ax ^long ay] [^long bx ^long by]]
   [(+ ax bx) (+ ay by)])
 
-(defn neighbours [[x y] amount]
-  (for [dy [-1 0 1]
-        dx [-1 0 1]
+(defn neighbours ^longs [[^long x ^long y] ^long amount]
+  (for [^long dy [-1 0 1]
+        ^long dx [-1 0 1]
         :when
         (case amount
           4 (odd? (- dx dy))
@@ -78,7 +78,7 @@
           9 true)]
     [(+ x dx) (+ y dy)]))
 
-(defn neighbours-3d [[x y z]]
+(defn neighbours-3d [[^long x ^long y ^long z]]
   [[(dec x) y z] [(inc x) y z]
    [x (dec y) z] [x (inc y) z]
    [x y (dec z)] [x y (inc z)]])
@@ -92,3 +92,23 @@
                [x char] (map-indexed vector line)
                :when (pred char)]
            [[x y] char]))))
+
+(defn none? [pred xs]
+  ;; Faster version of `not-any?`.
+  (reduce
+   (fn [acc x]
+     (if (pred x)
+       (reduced false)
+       acc))
+   true
+   xs))
+
+(defn array-none? [pred ^longs arr]
+  ;; Much much faster version of `not-any?` for long-arrays.
+  (loop [idx (dec (alength arr))
+         acc true]
+    (if (neg? idx)
+      acc
+      (if (pred (aget arr idx))
+        false
+        (recur (dec idx) acc)))))
