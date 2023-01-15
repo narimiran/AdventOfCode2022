@@ -4,26 +4,26 @@
             [clojure.core.match :refer [match]]))
 
 
-(defn go-up [path size]
+(defn add! [path size sizes]
   (let [val (parse-long size)]
-    (loop [sizes {}
+    (loop [sizes sizes
            path path]
       (if (empty? path) sizes
-          (recur (merge-with + sizes {path val})
+          (recur (assoc! sizes path (+ val (sizes path 0)))
                  (pop path))))))
 
 (defn calc-sizes [commands]
   (->> commands
        (reduce (fn [[sizes path] cmd]
                  (match (str/split cmd #" ")
-                   ["$" "cd" "/"]  [sizes ["/"]]
                    ["$" "cd" ".."] [sizes (pop path)]
                    ["$" "cd" f]    [sizes (conj path f)]
                    (:or ["$" "ls"]
                         ["dir" _]) [sizes path]
-                   [size _]        [(merge-with + sizes (go-up path size)) path]))
-               [{} []])
-       first))
+                   [size _]        [(add! path size sizes) path]))
+               [(transient {}) []])
+       first
+       persistent!))
 
 (defn part-1 [sizes]
   (->> sizes
