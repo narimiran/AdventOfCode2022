@@ -10,7 +10,7 @@
         yell   (if (= (count ops) 1)
                  {:val (parse-long (first ops))}
                  (let [[l op r] ops]
-                   {:op    (symbol op)
+                   {:op    (eval (symbol op))
                     :left  (keyword l)
                     :right (keyword r)}))]
     [monkey yell]))
@@ -18,10 +18,10 @@
 (defn dfs [monkeys m]
   (let [{:keys [val op left right]} (monkeys m)]
     (if val val
-        ((eval op) (dfs monkeys left) (dfs monkeys right)))))
+        (op (dfs monkeys left) (dfs monkeys right)))))
 
 (defn human-yell [monkeys]
-  (let [monkeys'  (assoc-in monkeys [:root :op] '-)
+  (let [monkeys'  (assoc-in monkeys [:root :op] -)
         init-sign (math/signum (dfs monkeys' :root))]
     (loop [lo 0
            hi 99999999999999]
