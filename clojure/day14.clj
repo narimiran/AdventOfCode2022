@@ -58,11 +58,12 @@
 (defn parse-input [input]
   (->> input
        aoc/read-input
-       (map aoc/integers)
-       (map #(partition 2 %))      ; points
-       (mapcat #(partition 2 1 %)) ; paths
-       (mapcat #(apply path->rock %))
-       dense-int-set
+       (into (dense-int-set)
+             (comp
+              (map aoc/integers)
+              (map #(partition 2 %))      ; points
+              (mapcat #(partition 2 1 %)) ; paths
+              (mapcat #(apply path->rock %))))
        add-floor))
 
 (defn solve

@@ -39,7 +39,7 @@
    resources))
 
 
-(defn calc-hash [t bots resources]
+(defn calc-hash ^long [t bots resources]
   ;; "Hashing" function to avoid having a nested vector
   ;; as a hash-map key.
   ;;

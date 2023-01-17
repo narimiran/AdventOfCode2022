@@ -56,8 +56,7 @@
               :when (and (< 0 x limit) (< 0 y limit))]
           [x y])]
     (->> potential-locations
-         (filter (partial found-beacon? sensors))
-         first
+         (aoc/find-first (partial found-beacon? sensors))
          calc-score)))
 
 

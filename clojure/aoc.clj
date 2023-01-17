@@ -112,3 +112,17 @@
       (if (pred (aget arr idx))
         false
         (recur (dec idx) acc)))))
+
+(defn count-if [pred xs]
+  (reduce
+   (fn [^long acc x]
+     (if (pred x) (inc acc) acc))
+   0
+   xs))
+
+(defn find-first [pred xs]
+  (reduce
+   (fn [_ x]
+     (when (pred x) (reduced x)))
+   nil
+   xs))

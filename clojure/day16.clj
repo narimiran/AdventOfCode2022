@@ -67,7 +67,7 @@
        (map (fn [attempt]
               [(set (keys attempt)) (score flows attempt)]))
        (reduce (fn [top-scores [k v]]
-                   (assoc! top-scores k (max (top-scores k 0) v)))
+                 (assoc! top-scores k (max (top-scores k 0) v)))
                (transient {}))
        persistent!))
 

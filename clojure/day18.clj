@@ -11,15 +11,16 @@
 (defn space-around [cubes]
   (let [[lower upper] (find-extremes cubes)]
     (loop [seen  cubes
-           queue [(repeat 3 lower)]]
-      (if (empty? queue) (set/difference seen cubes)
-          (let [valid (->> (peek queue)
-                           aoc/neighbours-3d
-                           (filter (fn [nb]
-                                     (and (not (seen nb))
-                                          (every? #(<= lower % upper) nb)))))]
-            (recur (into seen valid)
-                   (into (pop queue) valid)))))))
+           queue (list (repeat 3 lower))]
+      (if-let [hd (first queue)]
+        (let [valid (->> hd
+                         aoc/neighbours-3d
+                         (filter (fn [nb]
+                                   (and (not (seen nb))
+                                        (every? #(<= lower % upper) nb)))))]
+          (recur (into seen valid)
+                 (into (rest queue) valid)))
+        (set/difference seen cubes)))))
 
 (defn parse-input [filename]
   (->> filename
@@ -34,7 +35,7 @@
          neighbours (mapcat aoc/neighbours-3d cubes)
          outside    (space-around cubes)]
      [(count (remove cubes neighbours))
-      (count (filter outside neighbours))])))
+      (aoc/count-if outside neighbours)])))
 
 
 (solve)

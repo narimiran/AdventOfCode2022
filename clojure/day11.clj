@@ -29,7 +29,7 @@
       :items     items
       :operation op
       :divisor   divisor
-      :test      (partial #(if (zero? ^long (mod % divisor)) if-true if-false))})))
+      :test      (fn [x] (if (zero? ^long (mod x divisor)) if-true if-false))})))
 
 (defn update-monkeys [m k1 k2 f]
   ;; Much faster than the `update-in` built-in.

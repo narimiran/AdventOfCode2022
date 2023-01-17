@@ -5,14 +5,14 @@
 (defrecord Link [val left right])
 
 
-(defn initialize [values]
+(defn nums->links [values]
   (let [links (mapv #(->Link % (atom nil) (atom nil)) values)
         n     (count values)]
     (reset! (:left (first links)) (links (dec n)))
     (dotimes [i (dec n)]
       (reset! (:left (links (inc i))) (links i))
       (reset! (:right (links i)) (links (inc i))))
-    (reset! (:right (last links)) (links 0))
+    (reset! (:right (peek links)) (links 0))
     links))
 
 (defn unlink [link]
@@ -50,7 +50,7 @@
           links))))
 
 (defn find-zero [links]
-  (first (filter #(= (:val %) 0) links)))
+  (aoc/find-first #(zero? (:val %)) links))
 
 (defn mix [links rounds]
   (let [n       (count links)
@@ -69,8 +69,8 @@
   ([] (solve 20))
   ([input]
    (let [nums   (aoc/read-input input :int)
-         links1 (initialize nums)
-         links2 (initialize (map (partial * 811589153) nums))
+         links1 (nums->links nums)
+         links2 (nums->links (map (partial * 811589153) nums))
          p1     (future (mix links1 1))
          p2     (future (mix links2 10))]
      [@p1 @p2])))

@@ -2,21 +2,23 @@
   (:require aoc))
 
 
-(defn visible-from-outside? [lower-than-current? directions]
+(defn visible-from-outside? [^long height directions]
   (reduce
    (fn [acc dir]
-     (if (every? lower-than-current? dir)
+     (if (every? #(< ^long % height) dir)
        (reduced true)
        acc))
    false
    directions))
 
-(defn viewing-distance [lower-than-current? direction]
-  (->> direction
-       (take-while lower-than-current?)
-       count
-       inc
-       (min (count direction))))
+(defn viewing-distance [^long height direction]
+  (reduce
+   (fn [^long acc ^long h]
+     (if (< h height)
+       (inc acc)
+       (reduced (min (count direction) (inc acc)))))
+   0
+   direction))
 
 (defn go-through-forrest [height-map]
   (let [hor  height-map
@@ -27,9 +29,9 @@
                       (subvec row (inc x))    ; right
                       (rseq (subvec col 0 y)) ; up
                       (subvec col (inc y))]   ; down
-                lower-than-current? #(< ^long % ^long (row x))
-                visible-trees-count (map #(viewing-distance lower-than-current? %) dirs)]]
-      {:is-visible?  (visible-from-outside? lower-than-current? dirs)
+                height (row x)
+                visible-trees-count (map #(viewing-distance height %) dirs)]]
+      {:is-visible?  (visible-from-outside? height dirs)
        :scenic-score (reduce * visible-trees-count)})))
 
 (defn solve
@@ -38,7 +40,7 @@
    (let [height-map (->> (aoc/read-input input)
                          (mapv aoc/string->digits))
          results (go-through-forrest height-map)]
-     [(->> results (filter :is-visible?) count)
+     [(->> results (aoc/count-if :is-visible?))
       (->> results (map :scenic-score) (reduce max))])))
 
 
