@@ -3,9 +3,10 @@
             [clojure.data.int-map :as i]))
 
 
-(defn item-priority [l]
-  (let [i (int l)]
-    (if (> i 96) (- i 96) (- i 38))))
+(def item-priority
+  (zipmap "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+          (iterate inc 1)))
+
 
 (defn split-rucksack [rucksack]
   (let [mid (/ (count rucksack) 2)]
@@ -20,8 +21,8 @@
 (defn priority-sum [rucksacks split-func]
   (->> rucksacks
        split-func
-       (map find-common-item)
-       (apply +)))
+       (pmap find-common-item)
+       (reduce +)))
 
 (def f1 #(map split-rucksack %))
 (def f2 #(partition 3 %))
