@@ -5,6 +5,8 @@
             [clojure.string :as str]))
 
 
+(def ^:const N 500)
+(def ^:const start (* (inc N) (/ N 2)))
 
 
 (defn parse-motion [line]
@@ -12,19 +14,23 @@
        ((fn [[dir amount]]
           (repeat (parse-long amount) (keyword dir))))))
 
-(defn move-head [[x y] cmd]
+(defn move-head [^long pt cmd]
   (case cmd
-    :U [x (dec y)]
-    :D [x (inc y)]
-    :L [(dec x) y]
-    :R [(inc x) y]))
+    :U (- pt N)
+    :D (+ pt N)
+    :L (dec pt)
+    :R (inc pt)))
 
-(defn follow ^longs [[^long hx ^long hy] [^long tx ^long ty]]
-  (let [dx (- hx tx)
+(defn follow ^long [^long head ^long tail]
+  (let [hx (rem head N)
+        hy (quot head N)
+        tx (rem tail N)
+        ty (quot tail N)
+        dx (- hx tx)
         dy (- hy ty)]
-    (if (< (max (abs dx) (abs dy)) 2) ; Chebyshev distance
-      [tx ty]
-      [(+ tx (math/signum dx)) (+ ty (math/signum dy))])))
+    (if (< (max (abs dx) (abs dy)) 2)
+      tail
+      (+ tail (long (math/signum dx)) (* N (long (math/signum dy)))))))
 
 (defn move-tail [head tail]
   (reduce
@@ -41,18 +47,16 @@
       (move-tail tail)))
 
 (defn simulate [motions]
-  (let [hash-pos (fn ^long [[^long x ^long y]]
-                   (+ x (* 234 y)))]
-    (reduce
-     (fn [[rope seen-2 seen-10] cmd]
-       (let [new-pos (move-rope rope cmd)]
-         [new-pos
-          (conj! seen-2  (hash-pos (nth new-pos 1)))
-          (conj! seen-10 (hash-pos (nth new-pos 9)))]))
-     [(vec (repeat 10 [0 0]))
-      (transient (dense-int-set))
-      (transient (dense-int-set))]
-     motions)))
+  (reduce
+   (fn [[rope seen-2 seen-10] cmd]
+     (let [new-pos (move-rope rope cmd)]
+       [new-pos
+        (conj! seen-2  (nth new-pos 1))
+        (conj! seen-10 (nth new-pos 9))]))
+   [(vec (repeat 10 start))
+    (transient (dense-int-set))
+    (transient (dense-int-set))]
+   motions))
 
 (defn solve
   ([] (solve 9))
