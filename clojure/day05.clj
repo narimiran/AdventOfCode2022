@@ -14,12 +14,13 @@
   (let [[took remains] (split-at amount (stacks from))
         put (into (stacks to) (if pick-multiple? (reverse took) took))]
     (-> stacks
-        (assoc from remains)
-        (assoc to put))))
+        (assoc! from remains)
+        (assoc! to put))))
 
 (defn operate-crane [stacks instructions & pick-multiple?]
   (->> instructions
-       (reduce #(move-boxes %1 %2 pick-multiple?) stacks)
+       (reduce #(move-boxes %1 %2 pick-multiple?) (transient stacks))
+       persistent!
        (map first)
        (apply str)))
 
