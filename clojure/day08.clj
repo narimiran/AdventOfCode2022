@@ -29,10 +29,9 @@
                       (subvec row (inc x))    ; right
                       (rseq (subvec col 0 y)) ; up
                       (subvec col (inc y))]   ; down
-                height (row x)
-                visible-trees-count (map #(viewing-distance height %) dirs)]]
+                height (row x)]]
       {:is-visible?  (visible-from-outside? height dirs)
-       :scenic-score (reduce * visible-trees-count)})))
+       :scenic-score (transduce (map #(viewing-distance height %)) * dirs)})))
 
 (defn solve
   ([] (solve 8))
