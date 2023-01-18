@@ -1,6 +1,6 @@
 (ns day03
   (:require aoc
-            [clojure.data.int-map :as i]))
+            [clojure.set :as set]))
 
 
 (def item-priority
@@ -14,9 +14,10 @@
 
 (defn find-common-item [group]
   (->> group
-       (map i/dense-int-set)
-       (reduce i/intersection)
-       first))
+       (map set)
+       (reduce set/intersection)
+       first
+       item-priority))
 
 (defn priority-sum [rucksacks split-func]
   (->> rucksacks
@@ -30,12 +31,9 @@
 (defn solve
   ([] (solve 3))
   ([input]
-   (let [rucksacks (->> input
-                        aoc/read-input
-                        (map #(map item-priority %)))
-         p1 (future (priority-sum rucksacks f1))
-         p2 (future (priority-sum rucksacks f2))]
-     [@p1 @p2])))
+   (let [rucksacks (aoc/read-input input)]
+     [(priority-sum rucksacks f1)
+      (priority-sum rucksacks f2)])))
 
 
 (solve)
