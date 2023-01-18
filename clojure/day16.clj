@@ -47,20 +47,22 @@
 (defn traverse [current closed-valves conns visited time]
   (let [res [visited]]
     (if (< time 2) res
-        (apply concat res
-               (for [valve closed-valves
-                     :let [t (- ^long time
-                                ^long (conns (connection-hash current valve))
-                                1)]
-                     :when (> t 1)]
-                 (traverse valve (disj closed-valves valve) conns (assoc visited valve t) t))))))
+        (into res
+              cat
+              (for [valve closed-valves
+                    :let [t (- ^long time
+                               ^long (conns (connection-hash current valve))
+                               1)]
+                    :when (> t 1)]
+                (traverse valve (disj closed-valves valve) conns (assoc visited valve t) t))))))
 
 
 (defn score [flows attempt]
-  (->> attempt
-       (map (fn [[valve time]]
-              (* ^long (flows valve) ^long time)))
-       (reduce +)))
+  (transduce
+   (map (fn [[valve time]]
+          (* ^long (flows valve) ^long time)))
+   +
+   attempt))
 
 (defn best-score-per-valve-set [flows attempts]
   (->> attempts
@@ -82,13 +84,14 @@
 
 (defn part-1 [[valves conns flows]]
   (->> (traverse 0 valves conns {} 30)
-       (map (partial score flows))
-       (reduce max)))
+       (transduce
+        (map (partial score flows))
+        max 0)))
 
 (defn part-2 [[valves conns flows]]
   (->> (traverse 0 valves conns {} 26)
        (best-score-per-valve-set flows)
-       (sort-by second)
+       (sort-by val)
        (take-last 256) ; narrow down the search space
        tandem-scores
        (reduce max)))
@@ -99,9 +102,7 @@
              (mapv parse-line)
              create-connections)
         conns  (floyd-warshall (keys all-flows) direct-conns)
-        flows (->> all-flows
-                   (filter #(pos? (val %)))
-                   (into {}))
+        flows (into {} (filter #(pos? (val %))) all-flows)
         valves (set (keys flows))]
     [valves conns flows]))
 
