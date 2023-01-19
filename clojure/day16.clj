@@ -45,16 +45,17 @@
 
 
 (defn traverse [current closed-valves conns visited time]
-  (let [res [visited]]
-    (if (< time 2) res
-        (into res
-              cat
-              (for [valve closed-valves
-                    :let [t (- ^long time
-                               ^long (conns (connection-hash current valve))
-                               1)]
-                    :when (> t 1)]
-                (traverse valve (disj closed-valves valve) conns (assoc visited valve t) t))))))
+  (into [visited]
+        cat
+        (for [valve closed-valves
+              :let [t (- ^long time
+                         ^long (conns (connection-hash current valve))
+                         1)]
+              :when (> t 1)
+              :let [visited' (assoc visited valve t)]]
+          (if (< t 6)  ; optimization
+            [visited']
+            (traverse valve (disj closed-valves valve) conns visited' t)))))
 
 
 (defn score [flows attempt]
