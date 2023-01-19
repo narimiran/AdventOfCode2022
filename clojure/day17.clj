@@ -23,12 +23,19 @@
   (->Point (+ (:x a) (:x b)) (+ (:y a) (:y b))))
 
 (defn inbounds? [rock]
-  (every? #(<= 0 % 6) (map :x rock)))
+  (reduce
+   (fn [acc x]
+     (if-not (<= 0 x 6) (reduced false) acc))
+   true
+   (map :x rock)))
 
 (defn peaks-hash [tower max-y]
-  (reduce + (for [{:keys [x y]} tower
-                 :when (= y max-y)]
-             (* x x))))
+  (transduce
+   (map (fn [{:keys [x y]}]
+      (if (= y max-y) (* x x) 0)))
+   +
+   tower))
+
 
 (defn play [movements rounds]
   (let [M (count movements)
@@ -52,10 +59,9 @@
                  (if (not-any? tower rock'')
                    (recur rock'' (inc m))
                    (let [max-y       (max max-y (:y (peek moved-rock)))
-                         tower       (->> tower
-                                          (filter #(> (:y %) (- max-y 100)))
-                                          (concat moved-rock)
-                                          set)
+                         tower       (into (set moved-rock)
+                                           (filter #(> (:y %) (- max-y 100)))
+                                           tower)
                          t-hash      (+ ^long (peaks-hash tower max-y)
                                         ^long (* 100 (mod r R))
                                         ^long (* 500 (mod m M)))
