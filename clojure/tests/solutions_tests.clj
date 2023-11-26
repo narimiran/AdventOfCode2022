@@ -4,7 +4,7 @@
             day11 day12 day13 day14 day15
             day16 day17 day18 day19 day20
             day21 day22 day23 day24 day25
-            [clojure.test :refer [deftest are run-tests]]))
+            [clojure.test :refer [deftest are run-tests successful?]]))
 
 
 (defmacro check-day [day test-results real-results]
@@ -64,4 +64,6 @@
 (check-day 25 "2=-1=0" "122-2=200-0111--=200")
 
 
-(run-tests)
+(let [summ (run-tests)]
+  (when-not (successful? summ)
+    (throw (Exception. "tests failed"))))
