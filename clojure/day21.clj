@@ -6,7 +6,7 @@
 
 (defn parse-line [line]
   (let [[mkey & ops] (str/split line #" ")
-        monkey (keyword (apply str (drop-last mkey)))
+        monkey (keyword (str/join (drop-last mkey)))
         yell   (if (= (count ops) 1)
                  {:val (parse-long (first ops))}
                  (let [[l op r] ops]
@@ -17,7 +17,7 @@
 
 (defn dfs [monkeys m]
   (let [{:keys [val op left right]} (monkeys m)]
-    (if val val
+    (or val
         (op (dfs monkeys left) (dfs monkeys right)))))
 
 (defn human-yell [monkeys]
@@ -34,10 +34,9 @@
               (recur lo mid)))))))
 
 (defn solve
-  ([] (solve 21))
+  ([] (solve (aoc/read-file 21)))
   ([input]
-   (let [monkeys (->> (aoc/read-input input)
-                      (into {} (map parse-line)))]
+   (let [monkeys (into {} (aoc/parse-input input parse-line))]
      [(dfs monkeys :root)
       (human-yell monkeys)])))
 

@@ -37,13 +37,13 @@
 
 (defn parse-input [input]
   (->> input
-       aoc/read-input
+       aoc/parse-input
        (remove empty?)
        (mapv read-string)
        (partition 2)))
 
 (defn solve
-  ([] (solve 13))
+  ([] (solve (aoc/read-file 13)))
   ([input]
    (let [packets (parse-input input)]
      [(part-1 packets)

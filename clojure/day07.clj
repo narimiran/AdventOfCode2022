@@ -21,7 +21,7 @@
                    (:or ["$" "ls"]
                         ["dir" _]) [sizes path]
                    [size _]        [(add! path size sizes) path]))
-               [(transient {}) []])
+               [(transient {}) '()])
        first
        persistent!))
 
@@ -38,9 +38,9 @@
          (reduce min))))
 
 (defn solve
-  ([] (solve 7))
+  ([] (solve (aoc/read-file 7)))
   ([input]
-   (let [folders    (calc-sizes (aoc/read-input input))
+   (let [folders    (calc-sizes (aoc/parse-input input))
          total-size (folders ["/"])
          sizes      (vals folders)]
      [(part-1 sizes)

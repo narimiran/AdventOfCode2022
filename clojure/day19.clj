@@ -112,29 +112,23 @@
 
 (defn part-1 [blueprints]
   (->> blueprints
-       (pmap (partial geodes 24))
+       (pmap #(geodes 24 %))
        (mapv * (iterate inc 1))
        (reduce +)))
 
 (defn part-2 [blueprints]
   (->> blueprints
        (take 3)
-       (pmap (partial geodes 32))
+       (pmap #(geodes 32 %))
        (reduce *)))
 
-(defn parse-input [input]
-  (->> input
-       aoc/read-input
-       (mapv aoc/integers)
-       (mapv line->blueprint)))
-
 (defn solve
-  ([] (solve 19))
+  ([] (solve (aoc/read-file 19)))
   ([input]
-   (let [blueprints (parse-input input)
+   (let [blueprints (aoc/parse-input input (comp line->blueprint aoc/integers))
          p1 (future (part-1 blueprints))
          p2 (future (part-2 blueprints))]
      [@p1 @p2])))
 
 
-(solve)
+(time (solve))

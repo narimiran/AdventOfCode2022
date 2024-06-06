@@ -33,7 +33,7 @@
 
 
 (defn parse-input [input]
-  (let [inp (aoc/read-input input :vector)
+  (let [inp (aoc/parse-input input :chars)
         res (for [[y line] (map-indexed vector inp)
                   [x char] (map-indexed vector line)
                   :let [pt [(dec x) (dec y)]
@@ -54,7 +54,7 @@
     [blizzards walls w h]))
 
 (defn solve
-  ([] (solve 24))
+  ([] (solve (aoc/read-file 24)))
   ([input]
    (let [[_ _ w h :as data] (parse-input input)
          start -N
@@ -69,4 +69,3 @@
 
 
 (solve)
-

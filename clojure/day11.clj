@@ -65,11 +65,11 @@
 
 (defn parse-input [input]
   (->> input
-       aoc/read-input-paragraphs
+       aoc/parse-input-paragraphs
        (mapv parse-monkey)))
 
 (defn solve
-  ([] (solve 11))
+  ([] (solve (aoc/read-file 11)))
   ([input]
    (let [monkeys (parse-input input)]
      [(play-game monkeys 20 true)

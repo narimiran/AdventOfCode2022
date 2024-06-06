@@ -52,12 +52,13 @@
 
 (defn add-floor [rocks]
   (let [floor-y (+ 2 (reduce max (map #(mod % X) rocks)))
-        floor (for [x (range (- start-x floor-y) (+ start-x floor-y 1))] (+ (* X x) floor-y ))]
+        floor (for [x (range (- start-x floor-y) (+ start-x floor-y 1))]
+                (+ (* X x) floor-y))]
     (into rocks floor)))
 
 (defn parse-input [input]
   (->> input
-       aoc/read-input
+       aoc/parse-input
        (into (dense-int-set)
              (comp
               (map aoc/integers)
@@ -67,7 +68,7 @@
        add-floor))
 
 (defn solve
-  ([] (solve 14))
+  ([] (solve (aoc/read-file 14)))
   ([input]
    (let [rocks (parse-input input)]
      [(part-1 rocks)

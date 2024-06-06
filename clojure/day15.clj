@@ -56,21 +56,16 @@
               :when (and (< 0 x limit) (< 0 y limit))]
           [x y])]
     (->> potential-locations
-         (aoc/find-first (partial found-beacon? sensors))
+         (aoc/find-first #(found-beacon? sensors %))
          calc-score)))
 
 
 
 (defn solve
-  ([] (solve 15))
-  ([input & [limit]]
-   (let [limit   (if (= (str input) "15")
-                   4000000
-                   (or limit 20))
-         sensors (->> input
-                      aoc/read-input
-                      (map aoc/integers)
-                      (map find-radius))]
+  ([] (solve (aoc/read-file 15)))
+  ([input]
+   (let [limit   4000000
+         sensors (aoc/parse-input input (comp find-radius aoc/integers))]
      [(part-1 sensors (/ limit 2))
       (part-2 sensors limit)])))
 

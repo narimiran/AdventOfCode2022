@@ -47,10 +47,9 @@
   (transduce (map rules) + guide))
 
 (defn solve
-  ([] (solve 2))
+  ([] (solve (aoc/read-file 2)))
   ([input]
-   (let [strategy-guide (->> (aoc/read-input input)
-                             (mapv #(take-nth 2 %)))]
+   (let [strategy-guide (aoc/parse-input input #(take-nth 2 %))]
      [(play p1-rules strategy-guide)
       (play p2-rules strategy-guide)])))
 

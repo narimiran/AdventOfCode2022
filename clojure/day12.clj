@@ -41,9 +41,9 @@
            (- (int char) (int \a))])))
 
 (defn solve
-  ([] (solve 12))
+  ([] (solve (aoc/read-file 12)))
   ([input]
-   (let [grid (make-grid (aoc/read-input input :vector))
+   (let [grid (make-grid (aoc/parse-input input :chars))
          p1 (future (travel grid 1))
          p2 (future (travel grid 2))]
      [@p1 @p2])))

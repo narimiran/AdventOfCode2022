@@ -5,8 +5,8 @@
 (defrecord Point [x y])
 
 
-(defmacro ->Rock [pts]
-  `(map (fn [[x# y#]] (->Point x# y#)) ~pts))
+(defn ->Rock [pts]
+  (map (fn [[x y]] (->Point x y)) pts))
 
 (def rocks
   [(->Rock [[0 0] [1 0] [2 0] [3 0]])
@@ -32,7 +32,7 @@
 (defn peaks-hash [tower max-y]
   (transduce
    (map (fn [{:keys [x y]}]
-      (if (= y max-y) (* x x) 0)))
+         (if (= y max-y) (* x x) 0)))
    +
    tower))
 
@@ -45,7 +45,7 @@
            [0 0 0 0 (transient {}) tower]]
       (if (>= r rounds) (+ max-y skipped)
           (let [init-pos (->Point 2 (+ max-y 4))
-                rock     (mapv (partial pt+ init-pos) (nth rocks (mod r R)))]
+                rock     (mapv #(pt+ init-pos %) (nth rocks (mod r R)))]
             (recur
              (loop [rock rock
                     m    (long m)]
@@ -77,9 +77,9 @@
 
 
 (defn solve
-  ([] (solve 17))
+  ([] (solve (aoc/read-file 17)))
   ([input]
-   (let [movements (aoc/read-input-line input)]
+   (let [movements (aoc/parse-input-line input)]
      [(play movements 2022)
       (play movements 1000000000000)])))
 

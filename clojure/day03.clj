@@ -29,9 +29,9 @@
 (def f2 #(partition 3 %))
 
 (defn solve
-  ([] (solve 3))
+  ([] (solve (aoc/read-file 3)))
   ([input]
-   (let [rucksacks (aoc/read-input input)]
+   (let [rucksacks (aoc/parse-input input)]
      [(priority-sum rucksacks f1)
       (priority-sum rucksacks f2)])))
 

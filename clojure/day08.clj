@@ -34,11 +34,10 @@
        :scenic-score (transduce (map #(viewing-distance height %)) * dirs)})))
 
 (defn solve
-  ([] (solve 8))
+  ([] (solve (aoc/read-file 8)))
   ([input]
-   (let [height-map (->> (aoc/read-input input)
-                         (mapv aoc/string->digits))
-         results (go-through-forrest height-map)]
+   (let [height-map (aoc/parse-input input :digits)
+         results    (go-through-forrest height-map)]
      [(->> results (aoc/count-if :is-visible?))
       (->> results (map :scenic-score) (reduce max))])))
 

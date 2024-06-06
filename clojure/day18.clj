@@ -24,12 +24,12 @@
 
 (defn parse-input [filename]
   (->> filename
-       aoc/read-input
+       aoc/parse-input
        (map aoc/integers)
        set))
 
 (defn solve
-  ([] (solve 18))
+  ([] (solve (aoc/read-file 18)))
   ([input]
    (let [cubes      (parse-input input)
          neighbours (mapcat aoc/neighbours-3d cubes)

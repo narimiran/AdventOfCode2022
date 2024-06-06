@@ -85,7 +85,7 @@
 
 (defn parse-input [input]
   (->> input
-       aoc/read-input
+       aoc/parse-input
        (#(for [[y line] (map-indexed vector %)
                [x char] (map-indexed vector line)
                :when (= char \#)]
@@ -94,7 +94,7 @@
        dense-int-set))
 
 (defn solve
-  ([] (solve 23))
+  ([] (solve (aoc/read-file 23)))
   ([input]
    (let [elves (parse-input input)]
      [(part-1 elves)

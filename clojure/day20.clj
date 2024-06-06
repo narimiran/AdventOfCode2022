@@ -66,11 +66,11 @@
          (reduce +))))
 
 (defn solve
-  ([] (solve 20))
+  ([] (solve (aoc/read-file 20)))
   ([input]
-   (let [nums   (aoc/read-input input :int)
+   (let [nums   (aoc/parse-input input :int)
          links1 (nums->links nums)
-         links2 (nums->links (map (partial * 811589153) nums))
+         links2 (nums->links (map #(* % 811589153) nums))
          p1     (future (mix links1 1))
          p2     (future (mix links2 10))]
      [@p1 @p2])))

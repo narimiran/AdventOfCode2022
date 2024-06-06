@@ -11,11 +11,10 @@
       (<= a c b)))
 
 (defn parse-input [input]
-  (->> (aoc/read-input input)
-       (mapv #(aoc/integers % {:negative? false}))))
+  (aoc/parse-input input #(aoc/integers % {:negative? false})))
 
 (defn solve
-  ([] (solve 4))
+  ([] (solve (aoc/read-file 4)))
   ([input]
    (let [assignments-pairs (parse-input input)]
      [(aoc/count-if fully-contain? assignments-pairs)

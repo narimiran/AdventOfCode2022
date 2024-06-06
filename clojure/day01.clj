@@ -3,12 +3,12 @@
 
 
 (defn parse-input [input]
-  (->> (aoc/read-input-paragraphs input :int)
+  (->> (aoc/parse-input-paragraphs input :int)
        (map #(reduce + %))
        (sort >)))
 
 (defn solve
-  ([] (solve 1))
+  ([] (solve (aoc/read-file 1)))
   ([input]
    (let [calories (parse-input input)]
      [(first calories)

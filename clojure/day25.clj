@@ -17,16 +17,16 @@
 (defn to-5 [number]
   (loop [d number
          acc '()]
-    (if (zero? d) (apply str acc)
+    (if (zero? d) (str/join acc)
         (let [m (mod  (+ d 2) 5)
               d (quot (+ d 2) 5)
               digit (nth digits m)]
           (recur d (cons digit acc))))))
 
 (defn solve
-  ([] (solve 25))
+  ([] (solve (aoc/read-file 25)))
   ([input]
-   (let [numbers (aoc/read-input input)]
+   (let [numbers (aoc/parse-input input)]
      (->> numbers
           (map from-5)
           (reduce +)

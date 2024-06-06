@@ -14,9 +14,9 @@
    (iterate inc length)))
 
 (defn solve
-  ([] (solve 6))
+  ([] (solve (aoc/read-file 6)))
   ([input]
-   (let [datastream-buffer (aoc/read-input-line input)]
+   (let [datastream-buffer (aoc/parse-input-line input)]
      [(process datastream-buffer 4)
       (process datastream-buffer 14)])))
 

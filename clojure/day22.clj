@@ -36,7 +36,7 @@
   (reduce
    (fn [[p d] _]
      (let [p'       (aoc/pt+ p d)
-           [p'' d'] (if (not (contains? grid p'))
+           [p'' d'] (if-not (contains? grid p')
                       (wrap-fn p' d)
                       [p' d])]
        (if (= \. (grid p'' \#))
@@ -63,14 +63,14 @@
      ({[1 0] 0 , [0 1] 1 , [-1 0] 2 , [0 -1] 3} d)))
 
 (defn solve
-  ([] (solve 22))
+  ([] (solve (aoc/read-file 22)))
   ([input]
-   (let [[field [moves]] (aoc/read-input-paragraphs input)
+   (let [[field [moves]] (aoc/parse-input-paragraphs input)
          start  [(str/index-of (first field) \.) 0]
          moves  (-> moves
                     (str/replace #"(L|R)" " $1 ")
                     (str/split #" "))
-         grid   (aoc/vec2d->grid field #{\. \#})
+         grid   (aoc/grid->points field #{\. \#})
          move_  (partial traverse start moves grid)]
      [(-> (move_ wrap-1) password)
       (-> (move_ wrap-2) password)])))

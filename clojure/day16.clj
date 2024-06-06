@@ -86,7 +86,7 @@
 (defn part-1 [[valves conns flows]]
   (->> (traverse 0 valves conns {} 30)
        (transduce
-        (map (partial score flows))
+        (map #(score flows %))
         max 0)))
 
 (defn part-2 [[valves conns flows]]
@@ -98,17 +98,15 @@
        (reduce max)))
 
 (defn parse-input [input]
-  (let [[all-flows direct-conns]
-        (->> (aoc/read-input input)
-             (mapv parse-line)
-             create-connections)
+  (let [[all-flows direct-conns] (create-connections
+                                  (aoc/parse-input input parse-line))
         conns  (floyd-warshall (keys all-flows) direct-conns)
         flows (into {} (filter #(pos? (val %))) all-flows)
         valves (set (keys flows))]
     [valves conns flows]))
 
 (defn solve
-  ([] (solve 16))
+  ([] (solve (aoc/read-file 16)))
   ([input]
    (let [data (parse-input input)
          p1 (future (part-1 data))

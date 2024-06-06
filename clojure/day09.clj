@@ -59,9 +59,9 @@
    motions))
 
 (defn solve
-  ([] (solve 9))
+  ([] (solve (aoc/read-file 9)))
   ([input]
-   (let [motions   (mapcat parse-motion (aoc/read-input input))
+   (let [motions   (mapcat parse-motion (aoc/parse-input input))
          [_ p1 p2] (simulate motions)]
      [(count p1)
       (count p2)])))
