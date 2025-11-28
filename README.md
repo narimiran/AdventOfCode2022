@@ -6,12 +6,13 @@ All my Advent of Code repos:
 * [AoC 2016 in Python, Clojure (+ visualizations)](https://github.com/narimiran/advent_of_code_2016)
 * [AoC 2017 in Nim, OCaml, Python](https://github.com/narimiran/AdventOfCode2017)
 * [AoC 2018 in Nim, Python, Racket](https://github.com/narimiran/AdventOfCode2018)
-* [AoC 2019 in OCaml, Python](https://github.com/narimiran/AdventOfCode2019)
+* [AoC 2019 in OCaml, Python, Clojure](https://github.com/narimiran/AdventOfCode2019)
 * [AoC 2020 in Nim, one liner-y Python, Racket](https://github.com/narimiran/AdventOfCode2020)
 * [AoC 2021 in Python, Racket](https://github.com/narimiran/AdventOfCode2021)
 * [AoC 2022 in Python, Clojure](https://github.com/narimiran/AdventOfCode2022) (this repo)
 * [AoC 2023 in Clojure](https://github.com/narimiran/AdventOfCode2023)
-* [AoC 2024 in Clojure (Clerk notebooks)](https://github.com/narimiran/aoc2024)
+* [AoC 2024 in Clojure (Clerk notebooks), Python, Elixir](https://github.com/narimiran/aoc2024)
+* [AoC 2025 in Clojure (Clerk notebooks)](https://github.com/narimiran/aoc2025)
 
 
 &nbsp;
@@ -54,4 +55,3 @@ Day 00: Helper file                           | [aoc.py](python/aoc.py)     | [a
 [Day 23](http://adventofcode.com/2022/day/23) | [day23.py](python/day23.py) | [day23.clj](clojure/day23.clj) | ~~More complex numbers.~~ Plain numbers are much faster.
 [Day 24](http://adventofcode.com/2022/day/24) | [day24.py](python/day24.py) | [day24.clj](clojure/day24.clj) | Set operations for the win.
 [Day 25](http://adventofcode.com/2022/day/25) | [day25.py](python/day25.py) | [day25.clj](clojure/day25.clj) | `+/- 2` for an easy conversion.
-

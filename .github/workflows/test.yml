@@ -13,21 +13,21 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Prepare java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '25'
 
       - name: Install Clojure
-        uses: DeLaGuardo/setup-clojure@12.1
+        uses: DeLaGuardo/setup-clojure@13.4
         with:
-          cli: '1.10.3.1013'
+          cli: '1.12.3.1577'
 
       - name: Cache clojure dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.m2/repository
